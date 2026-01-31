@@ -1,0 +1,36 @@
+<ox-page-header [showBackButton]="false" [title]="pageTitle()" [subTitle]="pageSubTitle()" [icon]="faFileLines"/>
+<div [formGroup]="formGroup">
+    <ox-card class="max-w-2xl mx-auto my-4">
+        <div class="p-4 sm:p-6">
+            <form [formGroup]="formGroup" class="space-y-4">
+                <ox-basic-input [formControl]="getControl('name')" id="name" i18n-label="@@ox.general.exam.name"
+                                label="Name"/>
+                <ox-basic-input [formControl]="getControl('description')" id="description"
+                                i18n-label="@@ox.general.exam.description" label="Description"/>
+                <ox-basic-input type="number" [formControl]="getControl('pointsToSucceeded')" id="score"
+                                i18n-label="@@ox.general.exam.pointsToSucceed" label="Points to succeed"/>
+                <ox-basic-input type="number" [formControl]="getControl('duration')" id="duration"
+                                i18n-label="@@ox.general.exam.duration" label="Duration for real exam in minutes"/>
+                <ox-basic-input type="number" [formControl]="getControl('maxQuestionsRealExam')" id="maxQuestionsRealExam"
+                                i18n-label="@@ox.general.exam.maxQuestionsRealExam" label="Max questions for real exam"/>
+                <ox-category-select [formGroup]="getCategoryGroup()"/>
+                <div class="flex flex-col">
+                    <label class="py-2" i18n="@@ox.general.status">Status</label>
+                    <ox-toggle-group [options]="toggleOptions"
+                                     [selectedValue]="selectedStatus()"
+                                     (valueChange)="statusTypeChanged($event)" />
+                </div>
+            </form>
+        </div>
+    </ox-card>
+    <ox-question-edit [formGroup]="formGroup" formArrayName="questions"
+                      [questionsInput]="questionsSignal()"
+                      [examId]="exam?.id || null"/>
+</div>
+<div class="gab-to-bottom-bar"></div>
+<ox-sticky-bottom-bar [countErrorElements]="invalidElementsSet().size"
+                      (indexChanged)="handleIndexChanged($event)"
+                      [showErrorControls]="invalidElementsSet().size > 0"
+                      (cancelClicked)="cancel()"
+                      (saveClicked)="submit()"
+/>

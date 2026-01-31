@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.733332 67.733333"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   sodipodi:docname="openxam.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showguides="true"
+     inkscape:zoom="0.74118967"
+     inkscape:cx="427.0162"
+     inkscape:cy="360.23168"
+     inkscape:window-width="2795"
+     inkscape:window-height="1167"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g3" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       transform="matrix(0.26458333,0,0,0.26458333,74.590275,25.024275)"
+       id="g3">
+      <!-- Paper -->
+      <rect
+         x="-226.66263"
+         y="-56.665657"
+         rx="16"
+         ry="16"
+         width="140"
+         height="180"
+         fill="#ffffff"
+         stroke="#2563eb"
+         stroke-width="8"
+         id="rect1" />
+      <!-- Folded corner -->
+      <polygon
+         points="140,30 140,0 110,0 "
+         fill="#93c5fd"
+         id="polygon1"
+         transform="translate(-226.66263,-56.665658)" />
+      <!-- Checkmark -->
+      <path
+         d="m -191.66263,33.334342 30,30 45,-55"
+         fill="none"
+         stroke="#22c55e"
+         stroke-width="14"
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         id="path1" />
+      <!-- Lines -->
+      <rect
+         x="-196.66263"
+         y="83.334343"
+         width="80"
+         height="8"
+         rx="4"
+         fill="#93c5fd"
+         id="rect2" />
+      <rect
+         x="-196.66263"
+         y="103.33434"
+         width="60"
+         height="8"
+         rx="4"
+         fill="#93c5fd"
+         id="rect3" />
+    </g>
+  </g>
+</svg>

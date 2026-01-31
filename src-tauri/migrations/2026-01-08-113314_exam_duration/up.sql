@@ -1,0 +1,1 @@
+ALTER TABLE exam ADD COLUMN duration INTEGER;

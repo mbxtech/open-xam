@@ -1,0 +1,9 @@
+<button
+        [class]="buttonClasses()"
+        [type]="type()"
+        [disabled]="disabled()"
+        [attr.aria-invalid]="ariaInvalid()"
+        data-slot="button"
+>
+    <ng-content></ng-content>
+</button>

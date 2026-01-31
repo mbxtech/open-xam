@@ -1,0 +1,110 @@
+{
+  "id": null,
+  "name": "Imported Entity",
+  "description": "Automatically parsed from source file",
+  "pointsToSucceeded": 36,
+  "duration": 30,
+  "statusType": "ACTIVE",
+  "createdAt": null,
+  "updatedAt": null,
+  "questions": [
+    {
+      "id": null,
+      "questionText": "How many definitions of the term \"Concept A\" exist?",
+      "pointsTotal": 1,
+      "type": "SINGLE_CHOICE",
+      "answers": [
+        {
+          "id": null,
+          "answerText": "Exactly one for all types of systems.",
+          "description": "Exactly one for all types of systems.",
+          "isCorrect": false,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        },
+        {
+          "id": null,
+          "answerText": "One for each type of system (e.g. \"Type 1\", \"Type 2\", \"Type 3\", \"Type 4\", \"Type 5\", …)",
+          "description": "One for each type of system (e.g. \"Type 1\", \"Type 2\", \"Type 3\", \"Type 4\", \"Type 5\", …)",
+          "isCorrect": false,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        },
+        {
+          "id": null,
+          "answerText": "A dozen or more different definitions.",
+          "description": "A dozen or more different definitions.",
+          "isCorrect": true,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        }
+      ],
+      "pointsPerCorrectAnswer": 0,
+      "createdAt": null,
+      "updatedAt": null,
+      "options": [],
+      "examId": null
+    },
+    {
+      "id": null,
+      "questionText": "Which THREE of the following aspects are covered by the term \"Concept A\"?",
+      "pointsTotal": 1,
+      "type": "MULTIPLE_CHOICE",
+      "answers": [
+        {
+          "id": null,
+          "answerText": "Elements",
+          "description": "Elements",
+          "isCorrect": true,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        },
+        {
+          "id": null,
+          "answerText": "Cross-cutting concepts",
+          "description": "Cross-cutting concepts",
+          "isCorrect": true,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        },
+        {
+          "id": null,
+          "answerText": "(internal and external) interfaces",
+          "description": "(internal and external) interfaces",
+          "isCorrect": true,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        },
+        {
+          "id": null,
+          "answerText": "Data structures",
+          "description": "Data structures",
+          "isCorrect": false,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        },
+        {
+          "id": null,
+          "answerText": "Resource sizing",
+          "description": "Resource sizing",
+          "isCorrect": false,
+          "createdAt": null,
+          "updatedAt": null,
+          "questionId": null
+        }
+      ],
+      "pointsPerCorrectAnswer": 0,
+      "createdAt": null,
+      "updatedAt": null,
+      "options": [],
+      "examId": null
+    }
+  ]
+}

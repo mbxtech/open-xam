@@ -1,0 +1,98 @@
+<ox-page-header 
+  [icon]="faChartLine" 
+  i18n-title="@@ox.dashboard.title" 
+  title="Dashboard" 
+  i18n-subTitle="@@ox.dashboard.subtitle" 
+  subTitle="Overview of your exams and statistics"
+  [showBackButton]="false">
+</ox-page-header>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+  <ox-card cssClass="p-6 bg-neutral-50 dark:bg-neutral-900 flex flex-row items-center gap-4">
+    <div class="p-3 rounded-full bg-brand-primary/10 text-brand-primary">
+      <fa-icon [icon]="faGraduationCap" size="2x"></fa-icon>
+    </div>
+    <div>
+      <p class="text-sm text-neutral-500 font-medium uppercase tracking-wider" i18n="@@ox.dashboard.stats.total_exams">Total Exams</p>
+      <h3 class="text-3xl font-bold">{{ statistics()?.examCount || 0 }}</h3>
+    </div>
+  </ox-card>
+
+  <ox-card cssClass="p-6 bg-neutral-50 dark:bg-neutral-900 flex flex-row items-center gap-4">
+    <div class="p-3 rounded-full bg-success-500/10 text-success-500">
+      <fa-icon [icon]="faCheckCircle" size="2x"></fa-icon>
+    </div>
+    <div>
+      <p class="text-sm text-neutral-500 font-medium uppercase tracking-wider" i18n="@@ox.dashboard.stats.active_exams">Active Exams</p>
+      <h3 class="text-3xl font-bold">{{ statistics()?.activeCount || 0 }}</h3>
+    </div>
+  </ox-card>
+
+  <ox-card cssClass="p-6 bg-neutral-50 dark:bg-neutral-900 flex flex-row items-center gap-4">
+    <div class="p-3 rounded-full bg-blue-500/10 text-blue-500">
+      <fa-icon [icon]="faQuestionCircle" size="2x"></fa-icon>
+    </div>
+    <div>
+      <p class="text-sm text-neutral-500 font-medium uppercase tracking-wider" i18n="@@ox.dashboard.stats.avg_questions">Avg. Questions</p>
+      <h3 class="text-3xl font-bold">{{ statistics()?.averageQuestionCount || 0 | number:'1.0-1' }}</h3>
+    </div>
+  </ox-card>
+
+  <ox-card cssClass="p-6 bg-neutral-50 dark:bg-neutral-900 flex flex-row items-center gap-4">
+    <div class="p-3 rounded-full bg-amber-500/10 text-amber-500">
+      <fa-icon [icon]="faChartLine" size="2x"></fa-icon>
+    </div>
+    <div>
+      <p class="text-sm text-neutral-500 font-medium uppercase tracking-wider" i18n="@@ox.dashboard.stats.avg_success_score">Avg. Success Score</p>
+      <h3 class="text-3xl font-bold">{{ statistics()?.averageSucceedingScore || 0 | number:'1.0-1' }}</h3>
+    </div>
+  </ox-card>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+  <ox-card cssClass="p-6 bg-neutral-50 dark:bg-neutral-900">
+    <h3 class="text-lg font-bold mb-4" i18n="@@ox.dashboard.status_distribution.title">Status Distribution</h3>
+    <div class="space-y-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <fa-icon [icon]="faCheckCircle" class="text-success-500"></fa-icon>
+          <span i18n="@@ox.dashboard.status.active">Active</span>
+        </div>
+        <span class="font-bold">{{ statistics()?.activeCount || 0 }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <fa-icon [icon]="faEdit" class="text-amber-500"></fa-icon>
+          <span i18n="@@ox.dashboard.status.draft">Draft</span>
+        </div>
+        <span class="font-bold">{{ statistics()?.draftCount || 0 }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <fa-icon [icon]="faEyeSlash" class="text-neutral-400"></fa-icon>
+          <span i18n="@@ox.dashboard.status.inactive">Inactive</span>
+        </div>
+        <span class="font-bold">{{ statistics()?.inactiveCount || 0 }}</span>
+      </div>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <fa-icon [icon]="faArchive" class="text-error-500"></fa-icon>
+          <span i18n="@@ox.dashboard.status.archived">Archived</span>
+        </div>
+        <span class="font-bold">{{ statistics()?.archiveCount || 0 }}</span>
+      </div>
+    </div>
+  </ox-card>
+
+  <ox-card cssClass="p-6 bg-brand-primary text-white">
+    <h3 class="text-xl font-bold mb-2" i18n="@@ox.dashboard.welcome.title">Welcome to OpenXAM</h3>
+    <p class="opacity-90 mb-6" i18n="@@ox.dashboard.welcome.text">
+      Manage your exams, questions, and certifications in one place. Use the sidebar to navigate through the different sections of the application.
+    </p>
+    <div class="flex gap-4">
+      <div class="flex-1 p-4 bg-white/10 rounded-lg">
+        <p class="text-sm opacity-80" i18n="@@ox.dashboard.info.quick_stat1">Quick access to all your created learning materials and exam sets.</p>
+      </div>
+    </div>
+  </ox-card>
+</div>

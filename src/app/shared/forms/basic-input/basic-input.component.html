@@ -1,0 +1,42 @@
+<div class="py-2">
+
+    @if (label.length) {
+        <label for="{{id}}" class="block text-sm font-medium text-default-font mb-1">{{ label }}
+            @if (isRequired()) {
+                <span class="text-error-500">*</span>
+            }
+        </label>
+    }
+    @if (type === 'textarea') {
+        <textarea
+            #inputElement
+            [class]="inputClasses()"
+            [class.border-error-500]="hasErrors"
+            id="{{id}}"
+            placeholder="{{placeholder}}"
+            [value]="value"
+            [rows]="rows"
+            (input)="handleInput($event)"
+            (blur)="onTouched()"
+            [disabled]="disabled"></textarea>
+    } @else {
+        <input
+            #inputElement
+            type="{{type}}"
+            [class]="inputClasses()"
+            [class.border-error-500]="hasErrors"
+            id="{{id}}"
+            placeholder="{{placeholder}}"
+            [value]="value"
+            (input)="handleInput($event)"
+            (blur)="onTouched()"
+            [disabled]="disabled"/>
+    }
+    @if (hasErrors && errors.length) {
+        @for (err of errors; track err.key) {
+            <div class="mt-1 invalid-feedback">
+                <small class="text-xs text-error-500">{{ err.key }}</small>
+            </div>
+        }
+    }
+</div>

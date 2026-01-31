@@ -1,0 +1,177 @@
+<div class="flex gap-6 pb-24">
+    <div class="w-64 shrink-0 sticky top-6 self-start my-4 h-full">
+        <ox-card cssClass="bg-neutral-50 dark:bg-neutral-900 p-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm" i18n="@@ox.general.exam.questions">Questions</h3>
+                <ox-badge variant="outlined">{{ formArray.length }}</ox-badge>
+            </div>
+
+            <div class="space-y-2 max-h-[calc(100vh-300px)] overflow-y-auto" #sidebar>
+                @for (questionControl of formArray.controls; track i; let i = $index) {
+                    <button
+                            class="w-full text-left p-3 rounded-lg border-2 border-neutral-border transition-all cursor-pointer hover:shadow-lg"
+                            id="question-sidebar-{{i}}"
+                            (click)="scrollToQuestion(i)"
+                            [class.dark:bg-brand-50]="currentQuestionInView() === i"
+                            [class.dark:border-brand-500]="currentQuestionInView() === i"
+                            [class.bg-brand-800]="currentQuestionInView() === i"
+                            [class.border-brand-50]="currentQuestionInView() === i"
+                    >
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="text-sm font-medium">Question {{ i + 1 }}</span>
+                            @if (getQuestionStatus(i) == 'error') {
+                                <fa-icon [icon]="faExclamationTriangle" class="text-red-600"/>
+                            }
+                            @if (getQuestionStatus(i) == 'complete') {
+                                <fa-icon [icon]="faCircleCheck" class="text-green-600"/>
+                            }
+                        </div>
+                        <p class="text-xs text-muted-foreground truncate">
+                            {{ questionControl.get('questionText')?.value || 'No question entered' }}
+                        </p>
+                    </button>
+                }
+            </div>
+            <ox-button class="w-full mt-4" i18n="@@ox.admninstration.edit.exam.questions.addAnswer"
+                       (click)="addQuestion()">
+                <fa-icon [icon]="faAdd" class="mr-2"/>
+                Add question
+            </ox-button>
+        </ox-card>
+    </div>
+    <div [formGroup]="formGroup()" class="w-full">
+        <div class="mt-4 flex items-center justify-between py-4">
+            <h1 i18n="@@ox.admninstration.edit.exam.question.createTitle" class="mb-4 text-heading-1 text-default-font">
+                Questions</h1>
+            <div class="flex flex-row gap-2">
+                <ox-button size="icon" (click)="handleCollapseAll()" variant="outline">
+                    @if (allCollapsed()) {
+                        <fa-icon [icon]="faEye"/>
+                    } @else {
+                        <fa-icon [icon]="faEyeSlash"/>
+                    }
+                </ox-button>
+                <ox-button i18n="@@ox.admninstration.edit.exam.questions.addAnswer" (click)="addQuestion()">
+                    <fa-icon [icon]="faAdd" class="mr-2"/>
+                    Add question
+                </ox-button>
+            </div>
+        </div>
+        <div [formArrayName]="formArrayName()">
+            @for (_ of formArray.controls; track i; let i = $index) {
+                <ox-card cssClass="my-4 p-4"
+                         id="question-{{i}}"
+                         oxElementInView (inView)="onQuestionInView($event, i)"
+                         [threshold]="i === formArray.length - 1 ? 0.30 : 0.5"
+                >
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            @if (getControl('questionText', i).value) {
+                                <h3 class="text-heading-3 text-default-font"
+                                    i18n="@@ox.administration.edit.question.card.title"
+                                >
+                                    Question: {{ i + 1 }} -
+                                    {{
+                                        getControl('questionText', i).value | strippedText:
+                                            20
+                                    }}
+                                </h3>
+                            } @else {
+                                <h3 class="text-heading-3 text-default-font"
+                                    i18n="@@ox.admninstration.edit.question.card.new.title">(New)
+                                    Question {{ i + 1 }}</h3>
+                            }
+                            <ox-badge variant="outlined" class="gap-1.5">
+                                @switch (getQuestionType(i)) {
+                                    @case (QuestionType.ASSIGNMENT) {
+                                        <fa-icon [icon]="faArrowLeftRight"/>
+                                    }
+                                    @case (QuestionType.MULTIPLE_CHOICE) {
+                                        <fa-icon [icon]="faListCheck"/>
+                                    }
+                                    @case (QuestionType.SINGLE_CHOICE) {
+                                        <fa-icon [icon]="faCircleCheck"/>
+                                    }
+                                    @default {
+                                        <fa-icon [icon]="faCircleCheck"/>
+                                    }
+                                }
+                                {{ mapQuestionTypeToText(getQuestionType(i)) }}
+                            </ox-badge>
+                        </div>
+                        <ox-context-menu [items]="contextMenuItems" (itemClicked)="handleContextMenuAction($event, i)"/>
+                    </div>
+
+                    @if (!isCollapsed(i)) {
+                        <form [formGroupName]="i" class="space-y-4">
+                            <ox-basic-input type="number" [formControl]="getControl('pointsTotal', i)" id="score"
+                                            i18n-label="@@ox.administration.edit.question.points" label="Points"/>
+                            <ox-basic-input type="number" [formControl]="getControl('pointsPerCorrectAnswer', i)"
+                                            id="score"
+                                            i18n-label="@@ox.administration.edit.question.pointsPerCorrectAnswer"
+                                            label="Points per correct answer"/>
+
+                            <ox-basic-input [formControl]="getControl('questionText', i)" id="questionTextControl"
+                                            i18n-label="@@ox.administration.edit.question.questionText"
+                                            label="Question Text"
+                                            type="textarea"/>
+
+                            <ox-dynamic-select [options]="questionTypes" formControlName="type" label="Question Type"
+                                               i18n-label="@@ox.administration.edit.question.questionType"
+                                               i18n-placeholder="@@ox.administration.edit.question.questionTypePlaceholder"
+                                               placeholder="Question Type" [required]="true"/>
+                            <ox-category-select [formGroup]="getCategoryGroup(i)"/>
+
+                            <div data-orientation="horizontal" role="none" data-slot="separator-root"
+                                 class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px">
+                            </div>
+                            @if (getQuestionType(i) === QuestionType.ASSIGNMENT) {
+                                <ox-assignment-option
+                                        [assignmentOptions]="getAssignmentOptions(getGroupAtIndex(i).get('id')?.value || -1)"
+                                        [formGroup]="getGroupAtIndex(i)"
+                                        (answerChange)="handleAssignmentAnswersChange($event, i)"
+                                        formArrayName="options"
+                                        [answers]="getAnswers(getGroupAtIndex(i).get('id')?.value || -1)"/>
+                            } @else {
+                                <ox-answer-form [currentAnswers]="getAnswers(getGroupAtIndex(i).get('id')?.value || -1)"
+                                                [formGroup]="getGroupAtIndex(i)" formArrayName="answers"
+                                                [questionType]="getQuestionType(i)"/>
+                            }
+                        </form>
+                    } @else {
+                        <div class="flex flex-col items-center" style="opacity: 0.5;">
+                            <fa-icon [icon]="faEyeSlash"/>
+                            <span i18n="@@ox.administration.edit.question.content.hidden">Content is hidden</span>
+                        </div>
+                    }
+                </ox-card>
+            }
+        </div>
+    </div>
+</div>
+<ox-dialog [isOpen]="actionDialogState.open" (closed)="actionDialogState.open = false"
+           (submitted)="actionDialogState.onSubmit($event)" (cancelled)="actionDialogState.onAbort($event)"
+           [title]="actionDialogState.title" [submitLabel]="actionDialogState.submitLabel"
+           [cancelLabel]="actionDialogState.abortLabel">
+    <ox-dialog-header>
+        <h5 class="text-lg font-semibold text-gray-900">{{ actionDialogState.title }}</h5>
+    </ox-dialog-header>
+    <ox-dialog-content>
+        <p>{{ actionDialogState.message }}</p>
+    </ox-dialog-content>
+</ox-dialog>
+<ox-dialog [isOpen]="directActionDialogState.open" (closed)="directActionDialogState.open = false"
+           (submitted)="directActionDialogState.onSubmit($event)"
+           (cancelled)="directActionDialogState.onAbort($event)"
+           [title]="directActionDialogState.title" [submitLabel]="directActionDialogState.submitLabel"
+           [cancelLabel]="directActionDialogState.abortLabel">
+    <ox-dialog-header>
+        <h5 class="text-lg font-semibold text-gray-900">{{ directActionDialogState.title }}</h5>
+    </ox-dialog-header>
+    <ox-dialog-content>
+        <p>{{ directActionDialogState.message }}</p>
+        <ox-button variant="destructive" (click)="directActionDialogState.onAction($event)">
+            {{ directActionDialogState.actionBtnLabel }}
+        </ox-button>
+    </ox-dialog-content>
+</ox-dialog>

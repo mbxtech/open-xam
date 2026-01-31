@@ -1,0 +1,44 @@
+<div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.total">Total</div>
+            <div class="flex items-center justify-between">
+                <span class="text-heading-1 text-default-font">{{statisticsHeader().examCount}}</span>
+                <fa-icon class="text-brand-primary" [icon]="faArchive" style="font-size: 1.5rem;"/>
+            </div>
+        </div>
+    </ox-card>
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.active">Active</div>
+            <div class="flex items-center justify-between">
+                <span class="text-heading-1 text-default-font">{{statisticsHeader().activeCount}}</span>
+                <div class="w-8 h-8 rounded-full bg-success-50 flex items-center justify-center border border-success-400">
+                    <div class="w-3 h-3 rounded-full bg-success-600"></div>
+                </div>
+            </div>
+        </div>
+    </ox-card>
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.draft">Draft</div>
+            <div class="flex items-center justify-between">
+                <span class="text-heading-1 text-default-font">{{statisticsHeader().draftCount}}</span>
+                <div class="w-8 h-8 rounded-full bg-warning-50 flex items-center justify-center border border-warning-400">
+                    <div class="w-3 h-3 rounded-full bg-warning-600"></div>
+                </div>
+            </div>
+        </div>
+    </ox-card>
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.archive">Archive</div>
+            <div class="flex items-center justify-between">
+                <span class="text-heading-1 text-default-font">{{statisticsHeader().archiveCount}}</span>
+                <div class="w-8 h-8 rounded-full bg-neutral-50 flex items-center justify-center border border-neutral-border">
+                    <div class="w-3 h-3 rounded-full bg-neutral-400"></div>
+                </div>
+            </div>
+        </div>
+    </ox-card>
+</div>

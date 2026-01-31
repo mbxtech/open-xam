@@ -1,0 +1,159 @@
+@if (state() === 'INTRODUCTION') {
+    <ox-card cssClass="p-8 bg-neutral-50 dark:bg-neutral-900 mt-8">
+        <h1 class="text-2xl font-bold mb-4" i18n="@@ox.certification.intro.title">Certification Mode</h1>
+        <p class="mb-6" i18n="@@ox.certification.intro.description">
+            You are about to start a certification. Please read the rules carefully:
+        </p>
+
+        <div class="space-y-4 mb-8">
+            <div class="flex items-start gap-3">
+                <fa-icon [icon]="faClock" class="text-brand-primary mt-1"></fa-icon>
+                <div>
+                    <strong i18n="@@ox.certification.rules.timebox.title">Timebox:</strong>
+                    <p i18n="@@ox.certification.rules.timebox.text">
+                        You have {{ exam()?.duration || 30 }} minutes to complete the certification.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <fa-icon [icon]="faExclamationTriangle" class="text-error-500 mt-1"></fa-icon>
+                <div>
+                    <strong i18n="@@ox.certification.rules.anti_cheat.title">Anti-Cheat:</strong>
+                    <p i18n="@@ox.certification.rules.anti_cheat.text">
+                        Do not leave this page or move your mouse cursor out of the window. Doing so will immediately
+                        fail the certification.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3 text-neutral-500">
+                <fa-icon [icon]="faChevronRight" class="mt-1"></fa-icon>
+                <div>
+                    <strong i18n="@@ox.certification.rules.questions.title">Questions:</strong>
+                    <p i18n="@@ox.certification.rules.questions.text">
+                        30 questions will be randomly selected from the exam pool.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center gap-4">
+            <ox-button variant="outline" (click)="backToOverview()" i18n="@@ox.general.cancel">Cancel</ox-button>
+            <ox-button (click)="startCertification()" i18n="@@ox.certification.btn.start">Start Certification
+            </ox-button>
+        </div>
+    </ox-card>
+}
+
+@if (state() === 'EXAM') {
+    <div class="flex flex-col gap-6 mt-8">
+        <div class="flex justify-between items-center bg-neutral-50 dark:bg-neutral-900 p-4 rounded-md border border-neutral-border">
+            <div class="flex items-center gap-4">
+                <ox-badge variant="outlined">
+                    {{ currentQuestionIndex() + 1 }} / {{ exam()?.questions?.length }}
+                </ox-badge>
+                <div class="h-2 w-48 bg-neutral-200 rounded-full overflow-hidden">
+                    <div class="h-full bg-brand-primary transition-all duration-300" [style.width.%]="progress()"></div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 font-mono text-lg" [class.text-error-500]="timeRemaining() < 60">
+                <fa-icon [icon]="faClock"></fa-icon>
+                {{ formatTime(timeRemaining()) }}
+            </div>
+        </div>
+
+        @if (currentQuestion()) {
+            <ox-question-view
+                    [question]="currentQuestion()!"
+                    viewMode="realistic"
+                    (answerChanged)="handleAnswerChange($event)"
+            ></ox-question-view>
+        }
+
+        <div class="flex justify-between">
+            <ox-button variant="outline" [disabled]="currentQuestionIndex() === 0" (click)="previousQuestion()">
+                <fa-icon [icon]="faChevronLeft" class="mr-2"></fa-icon>
+                <span i18n="@@ox.general.previous">Previous</span>
+            </ox-button>
+
+            @if (currentQuestionIndex() === (exam()?.questions?.length || 0) - 1) {
+                <ox-button (click)="finishCertification()" i18n="@@ox.general.finish">Finish</ox-button>
+            } @else {
+                <ox-button (click)="nextQuestion()">
+                    <span i18n="@@ox.general.next">Next</span>
+                    <fa-icon [icon]="faChevronRight" class="ml-2"></fa-icon>
+                </ox-button>
+            }
+        </div>
+    </div>
+}
+
+@if (state() === 'RESULT') {
+    <div class="flex flex-col gap-8 mt-8">
+        <ox-card cssClass="p-8 text-center bg-neutral-50 dark:bg-neutral-900 mt-8">
+            @if (isPassed()) {
+                <fa-icon [icon]="faCheckCircle" class="text-6xl text-success-500 mb-4"></fa-icon>
+                <h1 class="text-3xl font-bold text-success-500 mb-2" i18n="@@ox.certification.result.passed.title">
+                    Congratulations!</h1>
+                <p class="text-lg mb-6" i18n="@@ox.certification.result.passed.text">You have successfully passed the
+                    certification.</p>
+            } @else {
+                <fa-icon [icon]="faTimesCircle" class="text-6xl text-error-500 mb-4"></fa-icon>
+                <h1 class="text-3xl font-bold text-error-500 mb-2" i18n="@@ox.certification.result.failed.title">
+                    Certification Failed</h1>
+                <p class="text-lg mb-6" i18n="@@ox.certification.result.failed.text">Unfortunately, you did not reach
+                    the required points.</p>
+            }
+
+            <div class="grid grid-cols-2 gap-4 max-w-md mx-auto mb-8">
+                <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-md">
+                    <div class="text-sm text-neutral-500 uppercase font-bold" i18n="@@ox.certification.result.score">
+                        Your Score
+                    </div>
+                    <div class="text-2xl font-bold">{{ score() }} / {{ exam()?.pointsToSucceeded }}</div>
+                </div>
+                <div class="bg-neutral-50 dark:bg-neutral-800 p-4 rounded-md">
+                    <div class="text-sm text-neutral-500 uppercase font-bold"
+                         i18n="@@ox.certification.result.questions">Questions
+                    </div>
+                    <div class="text-2xl font-bold">{{ exam()?.questions?.length }}</div>
+                </div>
+            </div>
+
+            <ox-button (click)="backToOverview()" i18n="@@ox.certification.btn.back">Back to Overview</ox-button>
+        </ox-card>
+
+        <h2 class="text-xl font-bold" i18n="@@ox.certification.result.review.title">Review Questions</h2>
+        <div class="space-y-6">
+            @for (q of exam()?.questions; track q.id) {
+                <div class="relative">
+                    <div class="absolute -left-2 top-0 bottom-0 w-1 rounded-l-md">
+                    </div>
+                    <ox-question-view
+                            [question]="q"
+                            [questionResult]="questionAnswers()[q.id!]"
+                            viewMode="simulation"
+                            [confirmed]="true"
+                    ></ox-question-view>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@if (state() === 'FAILED_CHEAT') {
+    <ox-card cssClass="p-8 text-center border-error-500 mt-8">
+        <fa-icon [icon]="faExclamationTriangle" class="text-6xl text-error-500 mb-4"></fa-icon>
+        <h1 class="text-3xl font-bold text-error-500 mb-2" i18n="@@ox.certification.cheat.title">Certification
+            Terminated</h1>
+        <p class="text-lg mb-8" i18n="@@ox.certification.cheat.text">
+            The certification was terminated because you left the window or the mouse cursor left the area.
+        </p>
+        <ox-button variant="destructive" (click)="backToOverview()" i18n="@@ox.certification.btn.back">Back to
+            Overview
+        </ox-button>
+    </ox-card>
+}
+

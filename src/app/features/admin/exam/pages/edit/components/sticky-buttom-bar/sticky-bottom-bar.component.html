@@ -1,0 +1,56 @@
+<div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-900 shadow-lg z-50">
+    <div class="container max-w-6xl mx-auto px-4 py-4">
+        <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                @if (countErrorElements() > 0) {
+                    <div class="flex items-center gap-2">
+                        <ox-badge variant="destructive" class="gap-1">
+                            <fa-icon [icon]="faCircleExclamation" />
+                            {{countErrorElements()}} Errors
+                        </ox-badge>
+                        <div class="flex gap-1">
+                            <ox-button
+                                    variant="outline"
+                                    size="sm"
+                                    (click)="prev()"
+                            >
+                                <fa-icon [icon]="faChevronUp"/>
+                                Previous Error
+                            </ox-button>
+                            <ox-button
+                                    variant="outline"
+                                    size="sm"
+                                    (click)="next()"
+                            >
+                                <fa-icon [icon]="faChevronDown"/>
+                                Next Error
+                            </ox-button>
+                        </div>
+                    </div>
+                } @else {
+                    <div class="flex items-center gap-2 text-green-600">
+                        <fa-icon [icon]="faCheck"/>
+                        <span class="text-sm font-medium">No Errors</span>
+                    </div>
+                }
+            </div>
+
+            <div class="flex gap-3">
+                <ox-button
+                        variant="destructive"
+                        (click)="cancel()"
+                >
+                    <fa-icon [icon]="faXMark" />
+                    Abort
+                </ox-button>
+                <ox-button
+                        variant="default"
+                        (click)="save()"
+                >
+                    <fa-icon [icon]="faFloppyDisk" />
+                    Save
+                </ox-button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.admin.imports.statistics.total">Total Failed</div>
+            <div class="flex items-center justify-between">
+                <span class="text-heading-1 text-default-font">{{statistics().total}}</span>
+                <fa-icon class="text-brand-primary" [icon]="faFileImport" style="font-size: 1.5rem;"/>
+            </div>
+        </div>
+    </ox-card>
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.admin.imports.statistics.validationErrors">Validation Errors</div>
+            <div class="flex items-center justify-between">
+                <span class="text-heading-1 text-default-font">{{statistics().validationErrors}}</span>
+                <div class="w-8 h-8 rounded-full bg-warning-50 flex items-center justify-center border border-warning-400">
+                    <fa-icon class="text-warning-600" [icon]="faExclamationTriangle" style="font-size: 0.875rem;"/>
+                </div>
+            </div>
+        </div>
+    </ox-card>
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.admin.imports.statistics.generalErrors">General Errors</div>
+            <div class="flex items-center justify-between">
+                <span class="text-heading-1 text-default-font">{{statistics().generalErrors}}</span>
+                <div class="w-8 h-8 rounded-full bg-destructive-50 flex items-center justify-center border border-destructive-400">
+                    <div class="w-3 h-3 rounded-full bg-destructive-600"></div>
+                </div>
+            </div>
+        </div>
+    </ox-card>
+    <ox-card>
+        <div class="p-4">
+            <div class="text-caption text-subtext-color mb-1" i18n="@@ox.admin.imports.statistics.mostRecent">Most Recent</div>
+            <div class="flex items-center justify-between">
+                <span class="text-body text-default-font">{{statistics().mostRecentDate ? (statistics().mostRecentDate | date:'short') : '-'}}</span>
+                <fa-icon class="text-neutral-400" [icon]="faClock" style="font-size: 1.25rem;"/>
+            </div>
+        </div>
+    </ox-card>
+</div>

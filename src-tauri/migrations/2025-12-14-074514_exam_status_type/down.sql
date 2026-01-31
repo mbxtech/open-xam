@@ -1,0 +1,1 @@
+ALTER TABLE exam DROP COLUMN status_type;

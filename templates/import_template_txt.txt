@@ -1,0 +1,20 @@
+Q: Select an option P: 1
+How many definitions of the term "Concept A" exist?
+[ ] (a) Exactly one for all types of systems.
+[ ] (b) One for each type of system (e.g. "Type 1", "Type 2", "Type 3", "Type 4", "Type 5", …)
+[X] (c) A dozen or more different definitions.
+
+Q: Select the three best aspects P: 1
+Which THREE of the following aspects are covered by the term "Concept A"?
+[X] (a) Elements
+[X] (b) Cross-cutting concepts
+[X] (c) (internal and external) interfaces
+[ ] (d) Data structures
+[ ] (e) Resource sizing
+
+Q: Select “Suitable” or “Not suitable” for each row. P: 2
+In your project, multiple roles work on the documentation of Concept A. Which methods are suitable for ensuring consistent and appropriate documentation and which are not?
+A: Suitable | Not suitable
+[X] [ ] (a) The lead role coordinates the creation of the documentation.
+[X] [ ] (b) Identical templates are used for documentation.
+[ ] [X] (c) All parts of the documentation are automatically extracted from the source system.

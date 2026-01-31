@@ -1,0 +1,65 @@
+<div [formGroup]="formGroup()">
+    <div class="p-1">
+        <div class="mt-4 flex items-center justify-between">
+            <div>
+                <h2 class="text-heading-2 text-default-font" i18n="@@ox.administration.edit.assignment.title">Assignment
+                </h2>
+            </div>
+            <div>
+                <ox-button i18n="@@ox.administration.edit.assignment.addAssignmentOption" (click)="addAssignmentOption()">
+                    <fa-icon [icon]="faAdd" class="mr-2"/>
+                    Add Option
+                </ox-button>
+            </div>
+        </div>
+
+        <div [formArrayName]="formArrayName()">
+            @for (_ of formArray.controls; track i; let i = $index) {
+            <ox-card cssClass="mt-3">
+                <div class="space-y-3 p-4" [formGroupName]="i">
+                    <div class="flex justify-end m-none">
+                        <ox-context-menu [items]="contextMenuItems"
+                            (itemClicked)="handleContextMenuAction($event, i)" />
+                    </div>
+                    <ox-basic-input type="text" [formControl]="getControl('text', i)" i18n-placeholder="@@ox.administration.edit.assignment.textPlaceholder" placeholder="e.g. Context or Term"
+                    required
+                    [label]="`Option ${i+1}`"/>
+
+                    <div data-orientation="horizontal" role="none" data-slot="separator-root"
+                        class="mt-4 bg-neutral-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px">
+                    </div>
+                    <ox-answer-form [currentAnswers]="answers()" [formGroup]="getGroupAtIndex(i)"
+                        formArrayName="assignmentAnswers" [assignedOptionId]="i+1"
+                        [questionType]="QuestionType.ASSIGNMENT" />
+                </div>
+
+            </ox-card>
+            }
+        </div>
+    </div>
+</div>
+<ox-dialog [isOpen]="actionDialogState.open" (closed)="actionDialogState.open = false"
+    (submitted)="actionDialogState.onSubmit($event)" (cancelled)="actionDialogState.onAbort($event)"
+    [title]="actionDialogState.title" [submitLabel]="actionDialogState.submitLabel"
+    [cancelLabel]="actionDialogState.abortLabel">
+    <ox-dialog-header>
+        <h5 class="text-heading-3 text-default-font">{{ actionDialogState.title }}</h5>
+    </ox-dialog-header>
+    <ox-dialog-content>
+        <p class="text-body text-default-font">{{ actionDialogState.message }}</p>
+    </ox-dialog-content>
+</ox-dialog>
+<ox-dialog [isOpen]="directActionDialogState.open" (closed)="directActionDialogState.open = false"
+    (submitted)="directActionDialogState.onSubmit($event)" (cancelled)="directActionDialogState.onAbort($event)"
+    [title]="directActionDialogState.title" [submitLabel]="directActionDialogState.submitLabel"
+    [cancelLabel]="directActionDialogState.abortLabel">
+    <ox-dialog-header>
+        <h5 class="text-heading-3 text-default-font">{{ directActionDialogState.title }}</h5>
+    </ox-dialog-header>
+    <ox-dialog-content>
+        <p class="text-body text-default-font">{{ directActionDialogState.message }}</p>
+        <ox-button (click)="directActionDialogState.onAction($event)">
+            {{directActionDialogState.actionBtnLabel}}
+        </ox-button>
+    </ox-dialog-content>
+</ox-dialog>

@@ -1,0 +1,46 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "log:default",
+    "opener:default",
+    "fs:allow-read",
+    "fs:allow-write",
+    "fs:allow-read-dir",
+    "fs:allow-exists",
+    "fs:allow-create",
+    "fs:allow-remove",
+    "fs:allow-rename",
+    "fs:allow-copy-file",
+    "fs:allow-mkdir",
+    "fs:allow-write-text-file",
+    "fs:default",
+    {
+      "identifier": "fs:read-all",
+      "allow": [
+        {
+          "path": "$DOCUMENT/**"
+        },
+        {
+          "path": "$DOWNLOAD/**"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:write-all",
+      "allow": [
+        {
+          "path": "$DOCUMENT/**"
+        },
+        {
+          "path": "$DOWNLOAD/**"
+        }
+      ]
+    }
+  ]
+}

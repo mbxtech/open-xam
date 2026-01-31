@@ -1,0 +1,49 @@
+<ox-card cssClass="p-4 my-4">
+    <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1 relative text-default-font">
+            <ox-input type="text" [placeholder]="searchPlaceholder" (valueChange)="searchChange.emit(String($event))"/>
+        </div>
+        <div class="flex gap-2">
+            <select class="px-4 py-2 border border-neutral-border rounded-md bg-neutral-50 dark:bg-neutral-900 text-default-font" [formControl]="examStatusControl">
+                <option value="ALL" i18n="@@ox.administration.overview.controls.select.option.all">All</option>
+                <option value="ACTIVE" i18n="@@ox.administration.overview.controls.select.option.active">Active</option>
+                <option value="DRAFT" i18n="@@ox.administration.overview.controls.select.option.draft">Draft</option>
+                <option value="ARCHIVED" i18n="@@ox.administration.overview.controls.select.option.archived">Archived</option>
+            </select>
+            <ox-button i18n="@@ox.administration.overview.createNew" (click)="goToEdit()">
+                <fa-icon class="w-4 h-4 mr-2" [icon]="faAdd"/>
+                New Exam
+            </ox-button>            
+            <ox-button i18n="@@ox.administration.overview.import.btn" (click)="importDialogOpen.set(true)">
+                <fa-icon class="w-4 h-4 mr-2" [icon]="faImport"/>
+                Import
+            </ox-button>
+        </div>
+    </div>
+</ox-card>
+
+<ox-dialog [isOpen]="importDialogOpen()">
+    <ox-dialog-header>
+        <h1 i18n="@@ox.administration.overview.importExamDialog.title">Import Exam</h1>
+    </ox-dialog-header>
+    <ox-dialog-content>
+        <ox-file-upload (uploadedFiles)="this.onFilesUploaded($event)" (allReadFiles)="this.importExam($event)">
+            <ox-uploaded-files-summary>
+                @for (file of uploadedFiles(); track file.id;) {
+                    <ox-file-upload-summary-element [uploadedFile]="file">
+                        @if (file.status.status === 'validation-error') {
+                            <ox-button variant="outline" (click)="editExam(file.id)">
+                                Edit
+                            </ox-button>
+                        }
+                    </ox-file-upload-summary-element>
+                }
+            </ox-uploaded-files-summary>
+        </ox-file-upload>
+    </ox-dialog-content>
+    <ox-dialog-footer>
+        <ox-button variant="outline" (click)="importDialogOpen.set(false)">
+            Close
+        </ox-button>
+    </ox-dialog-footer>
+</ox-dialog>

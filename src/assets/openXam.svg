@@ -1,0 +1,47 @@
+<svg width="900" height="260" viewBox="0 0 900 260"
+     xmlns="http://www.w3.org/2000/svg">
+
+    <symbol id="logo" viewBox="0 0 16 16">
+        <!-- Colors -->
+        <defs>
+            <style>
+                .blue { fill: #2563EB; }
+                .green { fill: #22C55E; }
+                .dark { fill: #0F172A; }
+            </style>
+        </defs>
+
+        <!-- Document Icon -->
+        <g transform="translate(40,40)">
+            <!-- Paper -->
+            <rect x="0" y="0" rx="16" ry="16" width="140" height="180"
+                  fill="white" stroke="#2563EB" stroke-width="8"/>
+
+            <!-- Folded corner -->
+            <polygon points="110,0 140,30 140,0"
+                     fill="#93C5FD"/>
+
+            <!-- Checkmark -->
+            <path d="M35 90 L65 120 L110 65"
+                  fill="none"
+                  stroke="#22C55E"
+                  stroke-width="14"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+
+            <!-- Lines -->
+            <rect x="30" y="140" width="80" height="8" rx="4" fill="#93C5FD"/>
+            <rect x="30" y="160" width="60" height="8" rx="4" fill="#93C5FD"/>
+        </g>
+
+        <!-- Text -->
+        <text x="220" y="150"
+              font-family="Inter, Arial, sans-serif"
+              font-size="96"
+              font-weight="600">
+            <tspan class="blue">Open</tspan>
+            <tspan class="green">Xam</tspan>
+        </text>
+    </symbol>
+
+</svg>

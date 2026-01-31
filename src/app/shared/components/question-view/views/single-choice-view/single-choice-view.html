@@ -1,0 +1,55 @@
+<div class="flex flex-col gap-3">
+    @for (answer of availableAnswers(); track answer.id) {
+        <div class="flex flex-col gap-2 p-3 border rounded-lg transition-colors border-neutral-border"
+             [class.hover:bg-neutral-100]="!confirmed()"
+             [class.dark:hover:bg-neutral-700]="!confirmed()"
+             [class.dark:bg-success-50]="showCorrectColor(answer.id!)"
+             [class.dark:border-success-400]="showCorrectColor(answer.id!)"
+             [class.dark:bg-error-50]="showWrongColor(answer.id!)"
+             [class.dark:border-error-400]="showWrongColor(answer.id!)"
+             [class.bg-green-50]="showCorrectColor(answer.id!)"
+             [class.border-green-400]="showCorrectColor(answer.id!)"
+             [class.bg-red-50]="showWrongColor(answer.id!)"
+             [class.border-red-400]="showWrongColor(answer.id!)"
+        >
+            <div class="flex items-center gap-2">
+                <input type="radio" [name]="'question-' + question().id" [id]="'answer-' + answer.id"
+                       [disabled]="confirmed()"
+                       [checked]="confirmed() && selectedAnswer()?.id === answer.id"
+                       (change)="onSelectionChange(answer.id!)"
+                       class="w-4 h-4 text-brand-primary focus:ring-brand-primary bg-neutral-100 dark:bg-neutral-700 border-neutral-border">
+                <label [for]="'answer-' + answer.id" class="text-body text-default-font cursor-pointer flex-1">
+                    {{ answer.answerText }}
+                </label>
+            </div>
+
+            @if (confirmed() && (viewMode() === 'simulation' || viewMode() === 'preview') && answer.description) {
+                <div class="text-caption text-subtext-color mt-1 pl-6 italic">
+                    {{ answer.description }}
+                </div>
+            }
+        </div>
+    }
+
+    @if (confirmed() && (viewMode() === 'simulation' || viewMode() === 'preview')) {
+        <ox-question-summary [result]="isAnswerCorrectChosen()">
+            <ox-question-summary-success>
+                <p i18n="@@ox.questionView.singleChoice.summary.correct">
+                    You choose the correct Answer
+                </p>
+            </ox-question-summary-success>
+            <ox-question-summary-error>
+                <p class="my-4" i18n="@@ox.questionView.singleChoice.summary.wrong">
+                    You choose the wrong Answer, your choice: <br>
+                    {{ selectedAnswer()?.answerText }} <br><br>
+                    correct would be:<br>
+                    {{ correctAnswer()?.answerText }}
+                    <br>
+                    <br>
+                    Have a look at the description under the available answers for more details.
+                </p>
+            </ox-question-summary-error>
+        </ox-question-summary>
+    }
+
+</div>

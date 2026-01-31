@@ -1,0 +1,12 @@
+<ox-card cssClass="p-4 my-4">
+    <div class="flex flex-col md:flex-row gap-4 justify-end">
+        <ox-button variant="outline" (click)="refresh.emit()">
+            <fa-icon class="w-4 h-4 mr-2" [icon]="faRotate"/>
+            <span i18n="@@ox.admin.imports.controls.refresh">Refresh</span>
+        </ox-button>
+        <ox-button variant="destructive" (click)="clearAll.emit()">
+            <fa-icon class="w-4 h-4 mr-2" [icon]="faTrash"/>
+            <span i18n="@@ox.admin.imports.controls.clearAll">Clear All</span>
+        </ox-button>
+    </div>
+</ox-card>

@@ -1,0 +1,53 @@
+<ox-card cssClass="p-6">
+    <div class="mb-6">
+        <h3 class="text-heading-2 text-default-font mb-2">
+            {{ question().questionText }}
+        </h3>
+        <div class="flex items-center gap-2">
+            <ox-badge variant="secondary" i18n="@@ox.questinView.pointsTotal">
+                {{ question().pointsTotal }} Points
+            </ox-badge>
+            @if (question().category?.name?.length) {
+                <ox-badge variant="secondary" i18n="@@ox.questinView.category">
+                    {{ question().category!.name }}
+                </ox-badge>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4">
+        @switch (question().type) {
+            @case (QuestionType.SINGLE_CHOICE) {
+                <ox-single-choice-view
+                        [questionResult]="questionResult()"
+                        [question]="question()"
+                        [viewMode]="viewMode()"
+                        [confirmed]="confirmed()"
+                        (answerChange)="handleAnswerChange($event)"
+                />
+            }
+            @case (QuestionType.MULTIPLE_CHOICE) {
+                <ox-multiple-choice-view
+                        [questionResult]="questionResult()"
+                        [question]="question()"
+                        [viewMode]="viewMode()"
+                        [confirmed]="confirmed()"
+                        (answerChange)="handleAnswerChange($event)"
+                />
+            }
+            @case (QuestionType.ASSIGNMENT) {
+                <ox-assignment-view
+                        [questionResult]="questionResult()"
+                        [question]="question()"
+                        [viewMode]="viewMode()"
+                        [confirmed]="confirmed()"
+                        (answerChange)="handleAnswerChange($event)"
+                />
+            }
+            @default {
+                <ox-alert type="primary" i18n-message="@@ox.questionView.notSupported"
+                          message="This Questiontype is not supported yet." [show]="true"/>
+            }
+        }
+    </div>
+</ox-card>

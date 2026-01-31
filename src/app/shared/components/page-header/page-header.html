@@ -1,0 +1,18 @@
+<div class="my-8">
+    <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+            @if (showBackButton()) {
+            <ox-button variant="ghost" size="sm" (click)="navigate()" class="mr-2">
+               <fa-icon [icon]="faArrowLeft"/>
+            </ox-button>
+            }
+            <fa-icon [icon]="icon()" class="text-brand-primary text-xl" style="font-size: 2.5em;"/>
+            <h1 class="text-default-font text-heading-1" >
+                {{title()}}
+            </h1>
+        </div>
+    </div>
+    <p class="text-subtext-color">
+        {{subTitle()}}
+    </p>
+</div>

@@ -1,0 +1,64 @@
+<ox-page-header [title]="pageTitle" [subTitle]="pageSubTitle" [icon]="faGraduationCap" />
+
+@if (exams$ | async; as ex) {
+<ox-card cssClass="bg-brand-100 bg-neutral-100 dark:bg-brand-50 border-brand-400 my-4">
+    <div class="p-4 border-brand-400">
+        <div class="flex items-start gap-3">
+            <fa-icon [icon]="faFileCheck" class="w-5 h-5 text-brand-primary mt-0.5" />
+            <div>
+                <h3 class="text-default-font text-heading-3 mb-1" i18n="@@ox.learning.overview.hint.title">Choose an
+                    exam</h3>
+                <p class="text-body text-subtext-color" i18n="@@ox.learning.overview.hint.text">
+                    <strong>Simulation:</strong> Train without timebox and rating.
+                    <strong class="ml-3">Real mode</strong> Simulation of the real exam with timebox and rating.
+                </p>
+            </div>
+        </div>
+    </div>
+</ox-card>
+
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2 my-4">
+    @for (exam of ex.data; track exam.id) {
+    <ox-exam-card [exam]="exam" />
+    } @empty {
+        <div class="text-center py-16">
+            <div class="text-heading-3 text-default-font mb-1" i18n="@@ox.learning.overview.empty.title">No exams available</div>
+            <div class="text-subtext-color" i18n="@@ox.learning.overview.empty.text">There are no exams available for you to take. Please create one to get started.</div>
+        </div>
+    }
+</div>
+<ox-pagination-controls [pagedResult]="currentPagedResult()" (pageOptions)="pageOptions.set($event)" />
+<ox-card cssClass="my-4">
+    <div class="p-4 bg-neutral-100 dark:bg-neutral-900 rounded-md">
+        <div class="flex items-center justify-center gap-8 text-sm">
+            <div class="text-center">
+                <div class="text-heading-1 text-default-font mb-1">{{statistics().examCount}}</div>
+                <div class="text-subtext-color" i18n="@@ox.learning.overview.statistics.title">Available exams</div>
+            </div>
+            <div class="h-12 w-px bg-neutral-border"></div>
+            <div class="text-center">
+                <div class="text-heading-1 text-default-font mb-1">
+                    {{statistics().averageQuestionCount}}
+                </div>
+                <div class="text-subtext-color" i18n="@@ox.learning.overview.statistics.avarageQuestions">Ø Questions per exam</div>
+            </div>
+            <div class="h-12 w-px bg-neutral-border"></div>
+            <div class="text-center">
+                <div class="text-heading-1 text-default-font mb-1"
+                    i18n="@@ox.learning.overview.statistics.avarageSucceedingScore">
+                    {{statistics().averageSucceedingScore}}
+                </div>
+                <div class="text-subtext-color">Ø Points to succeed</div>
+            </div>
+        </div>
+    </div>
+</ox-card>
+} @else {
+<div class="text-center py-16">
+    <fa-icon [icon]="faFileCheck" class="w-20 h-20 text-subtext-color mx-auto mb-4" />
+    <h3 class="text-heading-1 text-default-font mb-2" i18n="@@ox.learning.overview.noExams.title">No active exams available</h3>
+    <p class="text-body text-subtext-color" i18n="@@ox.learning.overview.statistics.noExams.text">
+       Currently there are no exams available.
+    </p>
+</div>
+}

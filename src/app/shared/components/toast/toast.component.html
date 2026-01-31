@@ -1,0 +1,37 @@
+@if (toasts$ | async; as toasts) {
+  <div class="z-max toast-container fixed bottom-0 right-0 p-3 flex flex-col gap-2">
+    @for (toast of toasts; track toast; let i = $index) {
+      <div
+        class="toast w-80 max-w-[90vw] border rounded-md shadow-lg overflow-hidden"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        [ngClass]="{
+          'bg-success-50 border-success-400 text-success-900': toast.type === 'success',
+          'bg-error-50 border-error-400 text-error-900': toast.type === 'danger' || toast.type === 'error',
+          'bg-warning-50 border-warning-400 text-warning-900': toast.type === 'warning',
+          'bg-brand-50 border-brand-400 text-brand-900': toast.type === 'info' || toast.type === 'primary',
+          'bg-neutral-50 border-neutral-400 text-neutral-900': !toast.type
+        }"
+      >
+        <div class="flex items-start justify-between gap-3 px-4 py-3">
+          <div class="min-w-0">
+            <strong class="block font-medium truncate">{{ toast.title }}</strong>
+            <small class="block text-xs text-gray-500">{{ toast.date | date: 'dd.MM.yyyy hh:mm' }}</small>
+          </div>
+          <button
+            type="button"
+            class="btn-close ml-2 inline-flex h-6 w-6 items-center justify-center rounded hover:bg-black/5 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+            aria-label="Close"
+            (click)="remove(i)"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="px-4 pb-4 pt-0 text-sm">
+          {{ toast.message }}
+        </div>
+      </div>
+    }
+  </div>
+}

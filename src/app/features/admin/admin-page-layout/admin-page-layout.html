@@ -1,0 +1,64 @@
+<div class="flex min-h-screen bg-neutral-50 dark:bg-neutral-950">
+    <!-- Sidebar -->
+    <aside
+        [class]="sidebarCollapsed() ? 'w-16' : 'w-64'"
+        class="flex flex-col border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition-all duration-300 ease-in-out sticky top-0 h-screen rounded-md my-4">
+
+        <!-- Sidebar Header -->
+        <div class="flex items-center justify-between h-16 px-4 border-b border-neutral-200 dark:border-neutral-800">
+            @if (!sidebarCollapsed()) {
+                <h2 class="text-lg font-semibold text-default-font" i18n="@@ox.admin.sidebar.title">
+                    Administration
+                </h2>
+            }
+            <button
+                (click)="toggleSidebar()"
+                class="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-subtext-color hover:text-default-font transition-colors"
+                [attr.aria-label]="sidebarCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'">
+                <fa-icon
+                    [icon]="sidebarCollapsed() ? faChevronRight : faChevronLeft"
+                    class="w-4 h-4"/>
+            </button>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 py-4">
+            <ul class="space-y-1 px-2">
+                @for (item of navItems; track item.route) {
+                    <li>
+                        <a
+                            [routerLink]="item.route"
+                            routerLinkActive="bg-brand-primary/10 text-brand-primary dark:bg-brand-primary/20"
+                            [routerLinkActiveOptions]="{ exact: false }"
+                            [class]="sidebarCollapsed() ? 'justify-center' : ''"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-subtext-color hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-default-font transition-colors group"
+                            [attr.title]="sidebarCollapsed() ? item.label : null">
+                            <fa-icon
+                                [icon]="item.icon"
+                                class="w-5 h-5 shrink-0"/>
+                            @if (!sidebarCollapsed()) {
+                                <span class="font-medium truncate">{{ item.label }}</span>
+                            }
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-neutral-200 dark:border-neutral-800">
+            @if (!sidebarCollapsed()) {
+                <p class="text-xs text-subtext-color" i18n="@@ox.admin.sidebar.footer">
+                    OpenXam Admin
+                </p>
+            }
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 min-w-0">
+        <div class="p-6">
+            <router-outlet/>
+        </div>
+    </main>
+</div>

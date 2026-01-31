@@ -1,0 +1,5 @@
+pub(crate) mod sqlite_answer_crud_repository_test;
+pub(crate) mod sqlite_exam_crud_repository_test;
+pub(crate) mod sqlite_assignment_option_crud_repository_test;
+mod sqlite_category_crud_repository_test;
+mod sqlite_question_crud_repository_test;

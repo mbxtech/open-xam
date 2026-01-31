@@ -1,0 +1,26 @@
+<div class="card" [ngClass]="class()">
+  <div class="card-header">
+    <div class="row justify-content-between align-items-center">
+      <div class="col-auto align-items-center align-content-center">
+        <h5 class="card-title">{{ title() }}</h5>
+        @if (subtitle().length) {
+          <h6 class="card-subtitle mb-2 text-muted">{{ subtitle() }}</h6>
+        }
+      </div>
+      <div class="col-auto">
+        <button class="btn" (click)="collapsed = !collapsed">
+          @if (collapsed) {
+            <fa-icon [icon]="faArrowDown" />
+          } @else {
+            <fa-icon [icon]="faArrowUp" />
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body" [ngStyle]="{
+  display: collapsed ? 'none' : 'block'
+  }">
+    <ng-content/>
+  </div>
+</div>

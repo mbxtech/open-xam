@@ -1,0 +1,15 @@
+<div class="mt-4 p-4 rounded-lg border-2" [class.bg-green-50]="result()" [class.border-green-500]="result()"
+    [class.bg-red-50]="!result()" [class.border-red-500]="!result()">
+    <div class="flex items-center gap-2">
+
+        @if (hasErrorContent && hasSuccessContent){
+        @if (result()) {
+        <ng-content select="ox-question-summary-success" />
+        } @else {
+        <ng-content select="ox-question-summary-error" />
+        }
+        }@else {
+            <ng-content />
+        }
+    </div>
+</div>

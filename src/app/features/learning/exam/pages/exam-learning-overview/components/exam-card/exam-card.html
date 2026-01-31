@@ -1,0 +1,51 @@
+<ox-card>
+    <div class="p-4">
+        <div class="mb-4">
+            <div class="flex items-start justify-between gap-2 mb-3">
+                <h3 class="leading-tight text-heading-3 text-default-font">{{ exam().name }}</h3>
+                <ox-badge variant="primary" i18n="@@ox.general.createdAt">
+                    {{ exam().statusType }}
+                </ox-badge>
+                @if (exam().category?.name?.length) {
+                    <ox-badge variant="secondary" i18n="@@ox.general.category">
+                        {{ exam().category!.name }}
+                    </ox-badge>
+                }
+            </div>
+
+            <div class="flex items-center gap-2 text-caption text-subtext-color">
+                <fa-icon [icon]="faCalendarDays"/>
+                <span i18n="@@ox.learning.examCard.createdAt">Created at: {{
+                        exam().createdAt | date:
+                            'dd.MM.yyyy'
+                    }}</span>
+            </div>
+        </div>
+
+        <div class="mb-6 flex-1">
+            <div class="space-y-2 text-body">
+                <div class="flex items-center justify-between py-2 border-t border-neutral-border">
+                    <span class="text-subtext-color" i18n="@@ox.general.questions">Quoxtions</span>
+                    <span class="font-medium text-default-font">{{ exam().questions.length }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-t border-neutral-border">
+                    <span class="text-subtext-color" i18n="@@ox.general.pointsToSucceed">Points to succeed</span>
+                    <span class="font-medium text-default-font">{{ exam().pointsToSucceeded }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <ox-button variant="outline" class="w-full group my-2" (click)="startSimulation()"
+                       i18n="@@ox.learning.examCard.simulationMode"
+            >
+                <fa-icon [icon]="faFlask" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"/>
+                Simulation mode
+            </ox-button>
+            <ox-button class="w-full group" i18n="@@ox.learning.examCard.realMode" (click)="startRealExam()">
+                <fa-icon [icon]="faPlay" class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform"/>
+                Real mode
+            </ox-button>
+        </div>
+    </div>
+</ox-card>

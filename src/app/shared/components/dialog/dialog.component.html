@@ -1,0 +1,37 @@
+@if (open()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" (click)="handleCancel($event)">
+    <div class="w-full max-w-2xl mx-4" (click)="$event.stopPropagation()">
+      <div class="bg-neutral-100 dark:bg-neutral-900 rounded-md shadow-overlay w-full border border-neutral-border">
+        <div class="px-6 py-4 border-b border-neutral-border">
+          @if (hasHeader) {
+            <ng-content select="ox-dialog-header" />
+          } @else {
+            <h5 class="text-heading-3 text-default-font">{{ title() }}</h5>
+          }
+        </div>
+        <div class="px-6 py-4 text-default-font text-body">
+          @if (hasContent) {
+            <ng-content select="ox-dialog-content" />
+          } @else {
+            <ng-content />
+          }
+        </div>
+        <div class="px-6 py-4 border-t border-neutral-border flex justify-end gap-3">
+          @if (hasFooter) {
+            <ng-content select="ox-dialog-footer" />
+          } @else {
+            <ox-button 
+              variant="outline"
+              (click)="handleCancel($event)">
+              {{ cancelLabel() }}
+            </ox-button>
+            <ox-button 
+              (click)="handleSubmit($event)">
+              {{ submitLabel() }}
+            </ox-button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

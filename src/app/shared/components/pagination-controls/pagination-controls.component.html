@@ -1,0 +1,25 @@
+<div class="mt-6 flex items-center justify-between">
+    <div class="text-caption text-subtext-color">
+        {{ ((page() - 1) * pageSize()) + 1 }}
+        -
+        {{ Math.min(page() * pageSize(), pagedResult().totalElements) }}
+        <span i18n="@@ox.pagination.of">of</span>
+        {{ pagedResult().totalElements }}
+    </div>
+    <div class="flex items-center gap-2">
+        <ox-button variant="outline" size="sm" (click)="prevPage()" [disabled]="page() === 1"
+                   i18n="@@ox.pagination.prev">
+            Previous
+        </ox-button>
+        <ox-button variant="outline" size="sm" (click)="nextPage()"
+                   [disabled]="page() * pageSize() >= pagedResult().totalElements"
+                   i18n="@@ox.pagination.next">Next
+        </ox-button>
+        <select class="ml-2 rounded-md border border-neutral-border bg-neutral-100 dark:bg-neutral-900 px-2 py-2 text-sm text-default-font shadow-sm focus:border-brand-primary focus:outline-none"
+                [(ngModel)]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+            @for (size of elementsPerPageOptions; track size) {
+                <option [ngValue]="size">{{ size }}</option>
+            }
+        </select>
+    </div>
+</div>

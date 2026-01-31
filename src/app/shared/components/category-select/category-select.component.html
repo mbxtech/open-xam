@@ -1,0 +1,13 @@
+<ox-dynamic-select [formControl]="selectCategoryControl" [options]="categories$ | async" i18n-label="@@ox.categorySelect.label" label="Category" [required]="false">
+    <div class="flex w-full gap-2 py-2 items-center">
+        <ox-button i18n="@@ox.categorie.select.reloadCategories" class="btn btn-secondary" (click)="reloadCategories()">
+            <fa-icon [icon]="faRotate"/>
+        </ox-button>
+        <ox-basic-input type="text" class="form-control" [formControl]="newCategoryControl"
+        i18n-placeholder="@@ox.categorieSelect.input"
+        placeholder="New Category"/>
+        <ox-button i18n="@@ox.categorieSelect.addNew" type="button" class="btn btn-primary" (click)="createCategory()">
+            Add
+        </ox-button>
+    </div>
+</ox-dynamic-select>

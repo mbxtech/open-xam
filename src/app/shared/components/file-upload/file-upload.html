@@ -1,0 +1,55 @@
+<div class="max-w-4xl mx-auto p-6">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2"
+            i18n="@@ox.fileUpload.title"
+        >File Upload</h1>
+        <p class="text-gray-600" i18n="@@ox.fileUpload.description">Drag and drop files or click to browse. You can only
+            upload files with a maximum size of 10MB.</p>
+        @if (maxFileSizeReached()) {
+            <ox-alert type="danger" i18n="@@ox.fileUpload.info">Maximum file size is 10MB.</ox-alert>
+        }
+    </div>
+
+    <div
+        #dropZone
+        (dragenter)="handleDragEnter($event)"
+        (dragover)="handleDragOver($event)"
+        (dragleave)="handleDragLeave($event)"
+        (drop)="handleDrop($event)"
+        (click)="fileInput.click()"
+        [class]="getDropZoneClasses()"
+    >
+        <input
+            #fileInput
+            type="file"
+            multiple
+            (change)="handleFileInput($event)"
+            class="hidden"
+        />
+
+        <svg
+                [class]="'mx-auto mb-4 transition-colors ' + (isDragging() ? 'text-blue-500' : 'text-gray-400')"
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+        >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+
+        <p class="text-lg font-semibold text-gray-700 mb-2">
+            {{ isDragging() ? 'Drop files here' : 'Drop files here or click to browse' }}
+        </p>
+        <p class="text-sm text-gray-500" i18n="@@ox.fileUpload.multiple">
+            Support for single or multiple file uploads
+        </p>
+    </div>
+
+    @if (hasSummary()) {
+        <ng-content select="ox-uploaded-files-summary"></ng-content>
+    }
+</div>

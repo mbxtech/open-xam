@@ -1,0 +1,27 @@
+<div class="py-2">
+  @if (label) {
+    <label [for]="formControlName" class="block text-sm font-medium text-default-font mb-1" id="{{ formControlName }}-label">
+      {{ label }}
+      @if (required) {
+        <span class="text-error-500">*</span>
+      }
+    </label>
+  }
+  <select
+    [formControl]="selectControl"
+    [class]="baseClasses"
+    [id]="formControlName"
+    [attr.multiple]="multiple ? true : null"
+    [attr.disabled]="disabled ? true : null"
+    (blur)="onBlur()">
+
+    <option value="" disabled selected>{{ placeholder }}</option>
+    @for (option of _options; track option.value) {
+      <option [value]="option.value">
+        {{ option.label }}
+      </option>
+    }
+  </select>
+</div>
+
+<ng-content/>

@@ -1,0 +1,77 @@
+<nav class="bg-neutral-600 dark:bg-neutral-900 text-white shadow">
+    <div class="px-4">
+        <div class="flex h-14 items-center justify-between">
+            <a class="flex items-center font-semibold text-lg" href="#">
+                <ox-logo variant="medium"/>
+            </a>
+            <button type="button"
+                    class="inline-flex items-center justify-center rounded-md p-2 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-white md:hidden"
+                    (click)="isMenuCollapsed = !isMenuCollapsed" [attr.aria-expanded]="!isMenuCollapsed"
+                    aria-controls="navbarNav"
+                    aria-label="Toggle navigation">
+                <span class="block h-0.5 w-5 bg-white mb-1"></span>
+                <span class="block h-0.5 w-5 bg-white mb-1"></span>
+                <span class="block h-0.5 w-5 bg-white"></span>
+            </button>
+            <ul class="hidden gap-4 md:flex">
+                <li>
+                    <a class="hover:underline" routerLink="/dashboard" routerLinkActive="font-bold underline"
+                       [routerLinkActiveOptions]="{exact: true}" (click)="isMenuCollapsed = true"
+                       i18n="@@ox.navigation.dashboard">
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a class="hover:underline" routerLink="/exam/overview" routerLinkActive="font-bold underline"
+                       [routerLinkActiveOptions]="{exact: false}" (click)="isMenuCollapsed = true"
+                       i18n="@@ox.navigation.exams">
+                        <i class="fas fa-file-alt mr-1"></i>
+                        Administration
+                    </a>
+                </li>
+                <li>
+                <li>
+                    <a class="hover:underline" routerLink="/learning" routerLinkActive="font-bold underline"
+                       [routerLinkActiveOptions]="{exact: false}" (click)="isMenuCollapsed = true"
+                       i18n="@@ox.navigation.learning">
+                        <i class="fas fa-file-alt mr-1"></i>
+                        Learning
+                    </a>
+                </li>
+            </ul>
+            <button (click)="themeService.toggleTheme()"
+                    class="px-4 py-2 bg-brand-primary text-white rounded hover:opacity-90 theme-transition">
+                @if (themeService.isDark()) {
+                    <fa-icon [icon]="faCloudMoon"/>
+                } @else {
+                    <fa-icon [icon]="faSun"/>
+                }
+            </button>
+        </div>
+        <div class="md:hidden" [class.hidden]="isMenuCollapsed">
+            <ul class="space-y-2 py-2">
+                <li>
+                    <a class="block rounded px-2 py-1 hover:bg-blue-500" routerLink="/dashboard"
+                       routerLinkActive="font-bold bg-blue-500" [routerLinkActiveOptions]="{exact: true}"
+                       (click)="isMenuCollapsed = true" i18n="@@ox.navigation.dashboard">
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a class="block rounded px-2 py-1 hover:bg-blue-500" routerLink="/exam/overview"
+                       routerLinkActive="font-bold bg-blue-500" [routerLinkActiveOptions]="{exact: false}"
+                       (click)="isMenuCollapsed = true" i18n="@@ox.navigation.exams">
+                        <i class="fas fa-file-alt mr-1"></i>
+                        Exams
+                    </a>
+                </li>
+                <li>
+          <span class="block select-none rounded px-2 py-1 opacity-60" i18n="@@ox.navigation.questions">
+            <i class="fas fa-question-circle mr-1"></i>
+            Questions
+          </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
