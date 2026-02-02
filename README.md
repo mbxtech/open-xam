@@ -19,6 +19,47 @@ The project combines a powerful Rust backend with a modern Angular frontend to c
 - **Database**: SQLite via Diesel ORM
 - **State Management**: @ngneat/elf
 
+## Quickstart
+
+### Prerequisites
+
+- **Node.js** 18+ and npm 9+
+- **Rust** 1.81.0+ ([rustup](https://rustup.rs/))
+- Platform-specific dependencies (see [Development Setup](./docs/development-setup.md#prerequisites))
+
+### Installation
+
+```bash
+# Clone and install dependencies
+git clone <repository-url> open-xam
+cd open-xam
+npm install
+
+# Start development (Angular + Tauri)
+npm run tauri:dev
+```
+
+### Common Commands
+
+```bash
+npm run tauri:dev       # Full-stack development mode
+npm run start           # Frontend only (port 1420)
+npm run test            # Run Jest unit tests
+npm run lint            # ESLint check
+npm run tauri:build     # Production build
+```
+
+## Documentation
+
+For detailed documentation, see the [docs/](./docs/) directory:
+
+- [Development Setup](./docs/development-setup.md) - Complete setup guide, testing, and troubleshooting
+- [Architecture](./docs/architecture.md) - Project structure and design patterns
+- [Validation API](./docs/validation-api.md) - Backend validation system
+- [Filter API](./docs/filter-api.md) - Query filtering system
+- [Macros](./docs/macros.md) - Rust macro documentation
+- [Import Functionality](./docs/import-functionality.md) - Exam import features
+
 ## Recommended IDE Setup
 
 - [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
