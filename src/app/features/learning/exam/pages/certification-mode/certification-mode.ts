@@ -124,11 +124,12 @@ export class CertificationMode implements OnInit, OnDestroy {
     const e = this.exam();
     if (!e) return;
 
-    // Prepare questions: shuffle and pick 30
+    // Prepare questions: shuffle and pick max number of questions for exam or 30 if not set
     let originalQuestions = [...e.questions];
     originalQuestions = originalQuestions.sort(() => Math.random() - 0.5);
-    if (originalQuestions.length > 30) {
-      originalQuestions = originalQuestions.slice(0, 30);
+    const maxQuestions = e.maxQuestionsRealExam ? e.maxQuestionsRealExam : 30;
+    if (originalQuestions.length > maxQuestions) {
+      originalQuestions = originalQuestions.slice(0, maxQuestions);
     }
 
     // Keep the original questions (with correct isCorrect values) in the exam signal
