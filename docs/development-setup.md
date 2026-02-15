@@ -113,6 +113,8 @@ npx ng version
 # Check Tauri CLI
 npm run tauri -- --version
 ```
+## Preparation for SQLite Database
+To use the Database, in development mode, you need to create a directory for the database file called "db" inside the root directory of the project.
 
 ## Project Structure
 
