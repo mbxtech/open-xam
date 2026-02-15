@@ -118,7 +118,7 @@ export class EditComponent implements OnDestroy {
 
             if (importID) {
                 this.importID.set(importID);
-                this._subscriptions$.add(this._importCacheService.loadInvalidFiel(Number(importID)).subscribe((result) => {
+                this._subscriptions$.add(this._importCacheService.loadInvalidFile(Number(importID)).subscribe((result) => {
                         if (result.data.length) {
                             this._setInitialValues(JSON.parse(result.data));
                         }
@@ -153,6 +153,7 @@ export class EditComponent implements OnDestroy {
         if (ex.category) {
             this.getCategoryGroup().patchValue(ex.category);
         }
+        console.log(ex);
         this.selectedStatus.set(ex.statusType ?? '');
         this.questionsSignal.set(ex.questions);
         this._formGroup.updateValueAndValidity();

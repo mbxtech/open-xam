@@ -16,7 +16,7 @@ export class ImportCacheService {
   public getAllInvalidFiles(): Observable<WithID[]> {
     return this._db.getAll(this._storeName);
   }
-  public loadInvalidFiel(id: number): Observable<{data: string}> {
+  public loadInvalidFile(id: number): Observable<{data: string}> {
     return this._db.getByID(this._storeName, id);
   }
   public clearInvalidFiles(): Observable<void> {

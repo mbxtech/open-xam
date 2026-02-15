@@ -67,7 +67,7 @@ describe('ImportCacheService', () => {
 
     dbService.getByID.mockReturnValue(of(response));
 
-    service.loadInvalidFiel(42).subscribe((result) => {
+    service.loadInvalidFile(42).subscribe((result) => {
       expect(dbService.getByID).toHaveBeenCalledWith('cache', 42);
       expect(result).toEqual(response);
       done();

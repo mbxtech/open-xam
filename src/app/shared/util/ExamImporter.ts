@@ -207,9 +207,13 @@ export default class ExamImporter {
 
     private _extractAnswer(line: string): IAnswer {
         const isCorrect = /^\[[xX]]/.test(line);
-        const text = line
+        let text = line
             .replace(/^\[[xX ]]\s*\([a-z]\)\s*/, "")
             .trim();
+
+        if (/^\[[xX ]]/.test(text)) {
+            text = line.replace(/^\[[xX ]]\s*/, "");
+        }
 
         return {
             id: null,

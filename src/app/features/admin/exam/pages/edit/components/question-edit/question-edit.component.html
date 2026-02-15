@@ -127,13 +127,13 @@
                             </div>
                             @if (getQuestionType(i) === QuestionType.ASSIGNMENT) {
                                 <ox-assignment-option
-                                        [assignmentOptions]="getAssignmentOptions(getGroupAtIndex(i).get('id')?.value || -1)"
+                                        [assignmentOptions]="getAssignmentOptions(i)"
                                         [formGroup]="getGroupAtIndex(i)"
                                         (answerChange)="handleAssignmentAnswersChange($event, i)"
                                         formArrayName="options"
-                                        [answers]="getAnswers(getGroupAtIndex(i).get('id')?.value || -1)"/>
+                                        [answers]="getAnswers(i)"/>
                             } @else {
-                                <ox-answer-form [currentAnswers]="getAnswers(getGroupAtIndex(i).get('id')?.value || -1)"
+                                <ox-answer-form [currentAnswers]="getAnswers(i)"
                                                 [formGroup]="getGroupAtIndex(i)" formArrayName="answers"
                                                 [questionType]="getQuestionType(i)"/>
                             }

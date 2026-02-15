@@ -366,16 +366,16 @@ export class QuestionEditComponent extends AbstractEdit implements OnDestroy, On
         return question;
     }
 
-    public getAnswers(questionId: number): IAnswer[] {
-        return this.questionsInput().find((q) => q.id === Number(questionId))?.answers || this.EMPTY_ANSWERS;
+    public getAnswers(index: number): IAnswer[] {
+        return this.questionsInput().find((_, i) => i === Number(index))?.answers || this.EMPTY_ANSWERS;
     }
 
     protected handleContextMenuAction(item: ContextMenuItem<number>, index: number): void {
         item.action(index);
     }
 
-    public getAssignmentOptions(questionId: number): IAssignmentOption[] {
-        return this.questionsInput().find((q) => q.id === Number(questionId))?.options || this.EMPTY_OPTIONS;
+    public getAssignmentOptions(index: number): IAssignmentOption[] {
+        return this.questionsInput().find((_, i) => i === Number(index))?.options || this.EMPTY_OPTIONS;
     }
 
     public get questionTypes(): { value: any, label: string }[] {
