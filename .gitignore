@@ -31,3 +31,4 @@ package-lock.json
 scripts
 .*.DS_STORE
 ./field_names/target/*
+artifacts/*

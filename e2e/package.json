@@ -1,0 +1,21 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "Module for E2E Tests of OpenXam",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "wdio run wdio.conf.js"
+  },
+  "dependencies": {
+    "@wdio/cli": "^9.19.0"
+  },
+  "devDependencies": {
+    "@wdio/local-runner": "^9.19.0",
+    "@wdio/mocha-framework": "^9.19.0",
+    "@wdio/spec-reporter": "^9.19.0",
+    "wait-on": "^9.0.4"
+  }
+}
