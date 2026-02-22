@@ -8,6 +8,7 @@ import { IPageOptions } from '../model/interfaces/page-options.interface';
 import { IPagedResult } from '../model/interfaces/paged-result.interface';
 import { BaseService } from './base-service';
 import { IExamOverallStatistics } from '../model/interfaces/exam-overall-statistics.interface';
+import Logger from "../util/Logger";
 
 @Injectable({
     providedIn: 'root'
@@ -51,6 +52,7 @@ export class ExamService extends BaseService {
 
     public getStatistics(): Observable<IExamOverallStatistics | null> {
         this.setInitialStates();
+        this.logger.logInfo('Fetching exam statistics');
         return this.invoke$<IExamOverallStatistics | null>('get_exam_overall_statistics').pipe(tap((val) => console.log(val)));
     }
 

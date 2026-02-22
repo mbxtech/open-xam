@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Build-Service
+  tauri-build:
+    build:
+      context: .
+      dockerfile: e2e/Dockerfile
+    volumes:
+      - ./src-tauri:/app/src-tauri
+      - tauri-target:/app/src-tauri/target
+    command: sh -c "cd /app/src-tauri && cargo build"
+
+  # Test-Service
+  tauri-test:
+    build:
+      context: .
+      dockerfile: e2e/Dockerfile
+    depends_on:
+      - tauri-build
+    environment:
+      - DISPLAY=:99
+    volumes:
+      - ./e2e:/app/e2e
+      - tauri-target:/app/src-tauri/target
+      - ./artifacts/logs:/root/.open-xam-logs
+      - ./artifacts/screenshots:/app/e2e/artifacts/screenshots
+      - ./artifacts/wdio-logs:/app/e2e/artifacts/logs
+    command: >
+      sh -c "
+        Xvfb :99 -screen 0 1920x1080x24 -ac &
+        sleep 8 &&
+        cd /app/e2e &&
+        npm test
+      "
+
+volumes:
+  tauri-target:

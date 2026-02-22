@@ -14,6 +14,7 @@ import {
   faEyeSlash,
   faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
+import Logger from "../../shared/util/Logger";
 
 @Component({
   selector: 'ox-dashboard',
@@ -35,7 +36,10 @@ export class Dashboard implements OnInit {
 
   public statistics: WritableSignal<IExamOverallStatistics | null> = signal(null);
 
+  private readonly logger = new Logger('Dashboard');
+
   ngOnInit(): void {
+    this.logger.logInfo('Dashboard initialized');
     this._examService.getStatistics().subscribe((stats) => {
       if (stats) {
         this.statistics.set(stats);

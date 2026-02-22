@@ -7,7 +7,7 @@ export class BaseService {
 
     private readonly _errors$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
     private readonly _loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    private readonly logger = new Logger('BaseService');
+    protected readonly logger = new Logger('BaseService');
 
     protected invoke$<T>(handler: string, params?: any): Observable<T | null> {
         if (!params) {
