@@ -14,7 +14,7 @@ const APP_BINARY_PATH = path.resolve(__dirname, '../src-tauri/target/debug/open-
 let tauriDriver;
 
 export const config = {
-    hostname: '127.0.0.1',  // ← 'hostname' statt 'host' (korrekter wdio-Key)
+    hostname: '127.0.0.1',
     port: 4444,
     specs: ['./specs/**/*.js'],
     maxInstances: 1,
@@ -33,7 +33,6 @@ export const config = {
         timeout: 60000,
     },
 
-    // ✅ onPrepare läuft BEVOR WebdriverIO eine Session aufbaut
     onPrepare: async () => {
         console.log(`Application (${APP_BINARY_PATH}) exists: ${fs.existsSync(APP_BINARY_PATH)}`);
 
@@ -45,7 +44,7 @@ export const config = {
 
         tauriDriver = spawn(
             driverBin,
-            ['--port', '4444'],  // ← Port explizit setzen
+            ['--port', '4444'],
             {
                 stdio: ['ignore', 'pipe', 'pipe'],
                 env: {
@@ -58,7 +57,7 @@ export const config = {
             }
         );
 
-        const driverLog = fs.createWriteStream('./artifacts/logs/tauri-driver.log');
+        /*const driverLog = fs.createWriteStream('./artifacts/logs/tauri-driver.log');
 
         tauriDriver.stdout.on('data', (d) => {
             process.stdout.write(`[DRIVER] ${d}`);
@@ -72,25 +71,15 @@ export const config = {
 
         tauriDriver.on('exit', (code, signal) => {
             console.error(`💥 tauri-driver exited! Code: ${code}, Signal: ${signal}`);
-        });
+        });*/
 
-        // Warten bis der Port wirklich offen ist
+        // Wait until driver port is open
         await waitOn({
             resources: ['tcp:127.0.0.1:4444'],
             timeout: 15000,
             interval: 250,
         });
         console.log('✅ tauri-driver ready on 127.0.0.1:4444');
-    },
-
-    beforeSuite: async () => {
-        let cmd = exec('ps');
-        cmd.stdout.on('data', (data) => console.log(`stdout: ${data}`));
-        cmd.stderr.on('data', (data) => console.error(`stderr: ${data}`));
-
-        let ss = exec('ss -tulpn | grep 4444');
-        ss.stdout.on('data', (data) => console.log(`stdout: ${data}`));
-        ss.stderr.on('data', (data) => console.error(`stderr: ${data}`));
     },
 
     afterTest: async (test, context, {error}) => {
@@ -105,9 +94,9 @@ export const config = {
             try {
                 const files = fs.readdirSync(APP_LOG_DIR);
                 for (const file of files) {
-                    const content = fs.readFileSync(path.join(APP_LOG_DIR, file), 'utf-8');
+                    /*const content = fs.readFileSync(path.join(APP_LOG_DIR, file), 'utf-8');
                     const last100Lines = content.split('\n').slice(-100).join('\n');
-                    console.log(`\n📋 App-Log [${file}]:\n${last100Lines}`);
+                    console.log(`\n📋 App-Log [${file}]:\n${last100Lines}`);*/
 
                     fs.copyFileSync(
                         path.join(APP_LOG_DIR, file),
@@ -115,7 +104,7 @@ export const config = {
                     );
                 }
             } catch (e) {
-                console.warn('⚠️ Logs nicht lesbar:', e.message);
+                console.warn('⚠️ Logs are not readable:', e.message);
             }
         }
     },

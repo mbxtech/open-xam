@@ -4,6 +4,9 @@
         [disabled]="disabled()"
         [attr.aria-invalid]="ariaInvalid()"
         data-slot="button"
+        [attr.data-testid]="dataTestId()"
+        [id]="id()"
+        (click)="click()"
 >
     <ng-content></ng-content>
 </button>

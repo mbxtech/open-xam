@@ -1,0 +1,115 @@
+{
+  "examToCreate": {
+    "id": null,
+    "name": "Workflow Test Exam",
+    "description": "An exam with all question types created by automated test.",
+    "pointsToSucceeded": 10,
+    "maxQuestionsRealExam": 4,
+    "createdAt": null,
+    "updatedAt": null,
+    "category": null,
+    "questions": [
+      {
+        "id": null,
+        "questionText": "Test Question 1 (Single choice)",
+        "pointsTotal": 10,
+        "type": "SINGLE_CHOICE",
+        "answers": [
+          {
+            "id": null,
+            "answerText": "Correct Answer",
+            "description": null,
+            "isCorrect": true,
+            "createdAt": null,
+            "updatedAt": null,
+            "assignedOptionId": -1,
+            "questionId": null
+          },
+          {
+            "id": null,
+            "answerText": "Wrong Answer",
+            "description": null,
+            "isCorrect": false,
+            "createdAt": null,
+            "updatedAt": null,
+            "assignedOptionId": -1,
+            "questionId": null
+          }
+        ],
+        "pointsPerCorrectAnswer": 0,
+        "category": null,
+        "createdAt": null,
+        "updatedAt": null,
+        "options": [],
+        "examId": 0
+      },
+      {
+        "id": null,
+        "questionText": "Test Question 2 (Multiple choice)",
+        "pointsTotal": 10,
+        "type": "MULTIPLE_CHOICE",
+        "answers": [
+          {
+            "id": null,
+            "answerText": "Correct Answer 1",
+            "description": null,
+            "isCorrect": false,
+            "createdAt": null,
+            "updatedAt": null,
+            "assignedOptionId": -1,
+            "questionId": null
+          },
+          {
+            "id": null,
+            "answerText": "Correct Answer 2",
+            "description": null,
+            "isCorrect": false,
+            "createdAt": null,
+            "updatedAt": null,
+            "assignedOptionId": -1,
+            "questionId": null
+          }
+        ],
+        "pointsPerCorrectAnswer": 0,
+        "category": null,
+        "createdAt": null,
+        "updatedAt": null,
+        "options": [],
+        "examId": 0
+      },
+      {
+        "id": null,
+        "questionText": "Test Question 3 (Assigment)",
+        "pointsTotal": 10,
+        "type": "ASSIGNMENT",
+        "answers": [
+          {
+            "id": null,
+            "answerText": "Definition 1",
+            "description": null,
+            "isCorrect": false,
+            "createdAt": null,
+            "updatedAt": null,
+            "assignedOptionId": 1,
+            "questionId": 1
+          }
+        ],
+        "pointsPerCorrectAnswer": 0,
+        "category": null,
+        "createdAt": null,
+        "updatedAt": null,
+        "options": [
+          {
+            "id": 1,
+            "text": "Term 1",
+            "questionId": null,
+            "rowId": null
+          }
+        ],
+        "examId": 0
+      }
+    ],
+    "statusType": "DRAFT",
+    "duration": 60
+  }
+}

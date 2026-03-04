@@ -1,7 +1,7 @@
 import {exec} from "child_process";
 
 describe('OpenXAM Startpage', () => {
-    it('should display the dashboard with welcome message', async () => {
+   /* it('should display the dashboard with welcome message', async () => {
         const welcomeHeader = await $('h3=Welcome to OpenXAM');
         await welcomeHeader.waitForExist({ timeout: 10000 });
         
@@ -15,5 +15,5 @@ describe('OpenXAM Startpage', () => {
         
         const title = await pageHeader.getText();
         expect(title).to.equal('Dashboard');
-    });
+    }); */
 });

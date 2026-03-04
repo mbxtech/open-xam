@@ -4,7 +4,8 @@
             <h2 class="text-heading-2 text-default-font" i18n="@@ox.administration.edit.answers.title">Answers</h2>
         </div>
         <div>
-            <ox-button i18n="@@ox.administration.edit.answers.addAnswer" (click)="addAnswer()">
+            <ox-button i18n="@@ox.administration.edit.answers.addAnswer" (click)="addAnswer()" id="add-answer-btn"
+                       dataTestId="add-answer-btn">
                 <fa-icon [icon]="faAdd" class="mr-2"/>
                 Add answer
             </ox-button>
@@ -37,6 +38,7 @@
                         <ox-checkbox formControlName="isCorrect"
                                      i18n-label="@@ox.administration.edit.answer.label.isCorrect"
                                      label="Correct"
+                                     id="is-correct-checkbox"
                                      style="margin-top: 20px;"
                         />
                     }
@@ -45,7 +47,8 @@
                             <div class="relative">
                                 <input type="radio" (click)="handleCorrectAnswerCheckBoxState(i)"
                                        [checked]="getControl('isCorrect', i).value === true"
-                                       class="peer sr-only"
+                                       data-testid="single-choice-is-correct-radio"
+                                       class="peer sr-only w-5 h-5"
                                 />
                                 <label class="flex items-center justify-center w-5 h-5 rounded-full border-2 border-gray-300 bg-white cursor-pointer transition-all
                      peer-checked:border-blue-600 peer-checked:bg-blue-600

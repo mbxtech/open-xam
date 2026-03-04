@@ -85,7 +85,8 @@ impl Question {
         if self.answers.len() < 2 {
             validation_errors.push(ValidationError::new(
                 "answers",
-                "A Question needs always answers, but none was provided!",
+                format!("A Question needs always at least 2 answers, but only {} was provided!",
+                    self.answers.len()),
             ));
         }
 

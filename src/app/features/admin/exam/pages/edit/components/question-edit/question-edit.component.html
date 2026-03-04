@@ -33,6 +33,8 @@
                 }
             </div>
             <ox-button class="w-full mt-4" i18n="@@ox.admninstration.edit.exam.questions.addAnswer"
+                       id="add-question-btn-sidebar"
+                       dataTestId="add-question-btn-sidebar"
                        (click)="addQuestion()">
                 <fa-icon [icon]="faAdd" class="mr-2"/>
                 Add question
@@ -44,14 +46,17 @@
             <h1 i18n="@@ox.admninstration.edit.exam.question.createTitle" class="mb-4 text-heading-1 text-default-font">
                 Questions</h1>
             <div class="flex flex-row gap-2">
-                <ox-button size="icon" (click)="handleCollapseAll()" variant="outline">
+                <ox-button size="icon" (click)="handleCollapseAll()" variant="outline" id="collapse-all-btn"
+                           dataTestId="collapse-all-btn">
                     @if (allCollapsed()) {
                         <fa-icon [icon]="faEye"/>
                     } @else {
                         <fa-icon [icon]="faEyeSlash"/>
                     }
                 </ox-button>
-                <ox-button i18n="@@ox.admninstration.edit.exam.questions.addAnswer" (click)="addQuestion()">
+                <ox-button i18n="@@ox.admninstration.edit.exam.questions.addAnswer"
+                           (click)="addQuestion()" id="add-question-btn"
+                           dataTestId="add-question-btn">
                     <fa-icon [icon]="faAdd" class="mr-2"/>
                     Add question
                 </ox-button>
@@ -104,10 +109,10 @@
 
                     @if (!isCollapsed(i)) {
                         <form [formGroupName]="i" class="space-y-4">
-                            <ox-basic-input type="number" [formControl]="getControl('pointsTotal', i)" id="score"
+                            <ox-basic-input type="number" [formControl]="getControl('pointsTotal', i)" id="points-total"
                                             i18n-label="@@ox.administration.edit.question.points" label="Points"/>
                             <ox-basic-input type="number" [formControl]="getControl('pointsPerCorrectAnswer', i)"
-                                            id="score"
+                                            id="points-per-correct-answer"
                                             i18n-label="@@ox.administration.edit.question.pointsPerCorrectAnswer"
                                             label="Points per correct answer"/>
 
@@ -119,6 +124,7 @@
                             <ox-dynamic-select [options]="questionTypes" formControlName="type" label="Question Type"
                                                i18n-label="@@ox.administration.edit.question.questionType"
                                                i18n-placeholder="@@ox.administration.edit.question.questionTypePlaceholder"
+                                               id="question-type-select"
                                                placeholder="Question Type" [required]="true"/>
                             <ox-category-select [formGroup]="getCategoryGroup(i)"/>
 

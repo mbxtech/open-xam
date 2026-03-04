@@ -142,8 +142,10 @@ open-xam/
 │   └── tauri.conf.json       # Tauri configuration
 ├── e2e/                      # End-to-end tests
 │   ├── specs/                # Test specifications
-│   ├── runner.js             # Test runner
-│   └── screenshots/          # Test screenshots
+│   ├── wdio.conf.js          # Test WebdriverIO runner configuration
+│   └── artifacts/            # Test screenshots
+        ├── logs/             # Contains Driver and App-Logs on failing test
+        ├── screenshots/      # Contains Screenshots of failing tests
 ├── docs/                     # Technical documentation
 ├── jest.config.js            # Jest configuration
 ├── tsconfig.json             # TypeScript configuration

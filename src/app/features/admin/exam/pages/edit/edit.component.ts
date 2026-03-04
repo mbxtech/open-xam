@@ -153,7 +153,6 @@ export class EditComponent implements OnDestroy {
         if (ex.category) {
             this.getCategoryGroup().patchValue(ex.category);
         }
-        console.log(ex);
         this.selectedStatus.set(ex.statusType ?? '');
         this.questionsSignal.set(ex.questions);
         this._formGroup.updateValueAndValidity();

@@ -41,7 +41,7 @@ COPY ../ ./
 
 RUN npm run tauri build -- --debug --no-bundle
 
-COPY ./e2e /app/e2e/
+#COPY ./e2e /app/e2e/
 WORKDIR /app/e2e
 
 RUN mkdir -p /app/e2e/artifacts/screenshots /app/e2e/artifacts/logs
