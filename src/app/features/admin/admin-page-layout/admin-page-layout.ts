@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
@@ -10,6 +10,9 @@ import {
     IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
 import { signal, WritableSignal } from '@angular/core';
+import { SidebarService } from './service/sidebar.service';
+import { Observable } from 'rxjs';
+import { ToggleGroup } from "../../../shared/forms/toggle-group/toggle-group";
 
 interface NavItem {
     label: string;
@@ -20,11 +23,12 @@ interface NavItem {
 @Component({
     selector: 'ox-admin-page-layout',
     imports: [
-        RouterOutlet,
-        RouterLink,
-        RouterLinkActive,
-        FaIconComponent
-    ],
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    FaIconComponent,
+    ToggleGroup
+],
     templateUrl: './admin-page-layout.html',
     styleUrl: './admin-page-layout.scss'
 })
@@ -34,6 +38,7 @@ export class AdminPageLayout {
     protected readonly faChevronRight = faChevronRight;
 
     protected sidebarCollapsed: WritableSignal<boolean> = signal(false);
+    private _sidebarService: SidebarService = inject(SidebarService);
 
     protected navItems: NavItem[] = [
         {
@@ -55,5 +60,13 @@ export class AdminPageLayout {
 
     protected toggleSidebar(): void {
         this.sidebarCollapsed.update(collapsed => !collapsed);
+    }
+
+    protected toggleStickyBottombar(): void {
+        this._sidebarService.toggleStickyBottombar();
+    }
+
+    public get isEditPage(): Observable<boolean> {
+        return this._sidebarService.isExamEditPage;
     }
 }

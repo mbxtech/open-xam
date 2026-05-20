@@ -1,6 +1,6 @@
-<div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-3" id="exam-overview-statistics-header">
     <ox-card>
-        <div class="p-4">
+        <div class="p-4" id="satistics-total">
             <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.total">Total</div>
             <div class="flex items-center justify-between">
                 <span class="text-heading-1 text-default-font">{{statisticsHeader().examCount}}</span>
@@ -9,7 +9,7 @@
         </div>
     </ox-card>
     <ox-card>
-        <div class="p-4">
+        <div class="p-4" id="satistics-active">
             <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.active">Active</div>
             <div class="flex items-center justify-between">
                 <span class="text-heading-1 text-default-font">{{statisticsHeader().activeCount}}</span>
@@ -20,7 +20,7 @@
         </div>
     </ox-card>
     <ox-card>
-        <div class="p-4">
+        <div class="p-4" id="satistics-draft">
             <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.draft">Draft</div>
             <div class="flex items-center justify-between">
                 <span class="text-heading-1 text-default-font">{{statisticsHeader().draftCount}}</span>
@@ -31,7 +31,7 @@
         </div>
     </ox-card>
     <ox-card>
-        <div class="p-4">
+        <div class="p-4" id="satistics-archive">
             <div class="text-caption text-subtext-color mb-1" i18n="@@ox.administration.overview.satistics.header.archive">Archive</div>
             <div class="flex items-center justify-between">
                 <span class="text-heading-1 text-default-font">{{statisticsHeader().archiveCount}}</span>

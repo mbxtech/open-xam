@@ -36,6 +36,13 @@ export class StickyBottomBar {
   public saveClicked: OutputEmitterRef<boolean> = output();
   public cancelClicked: OutputEmitterRef<boolean> = output();
   protected currentIndex: WritableSignal<number> = signal(1);
+ 
+  protected visible = signal(true);
+
+  protected toggleNav() {
+    this.visible.update(v => !v);
+  }
+
 
   protected next(): void {
     if (this.currentIndex() === this.countErrorElements()) {

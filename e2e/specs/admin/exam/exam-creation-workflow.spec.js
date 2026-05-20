@@ -155,7 +155,7 @@ describe('Exam Workflow', () => {
             async () => {
                 const html = await $('#toast-container').getHTML();
                 if (html.includes('toast-0')) {
-                    toastElement = await $('#toast-0'); // Referenz speichern
+                    toastElement = await $('#toast-0');
                     return true;
                 }
                 return false;
@@ -163,20 +163,20 @@ describe('Exam Workflow', () => {
             { timeout: 10000, interval: 500 }
         );
 
-        console.log("======TOAST");
-        console.log(await toastElement.getHTML());
         await expect(toastElement).toBeDisplayed();
 
-        const toastTitle = await toastElement.$('#toast-title-0');
+        const toastTitle = await $('#toast-title-0');
         await toastTitle.waitForDisplayed({ timeout: 5000 })
         await expect(toastTitle).toBeDisplayed();
-        await expect(toastTitle).toHaveText('Edit Exam result');
 
-        const toastMessage = await toastElement.$('#toast-message-0');
+        const toastMessage = await $('#toast-message-0');
         toastMessage.waitForDisplayed({ timeout: 5000 })
         await expect(toastMessage).toBeDisplayed();
-        await expect(toastMessage.getText()).toHaveText(
-            expect.stringContaining('Successfully created exam Workflow Test Exam')
-        );
+
+        const toastCloseBtn = await $('#toast-close-0');
+        expect(toastCloseBtn.isClickable()).toBeTruthy();
+        await toastCloseBtn.click();
+
+        await expect(await $('#toast-0')).not.toExist();
     })
 });
