@@ -22,11 +22,13 @@
           } @else {
             <ox-button 
               variant="outline"
-              (click)="handleCancel($event)">
+              (click)="handleCancel($event)"
+              data-testid="dialog-cancel-btn">
               {{ cancelLabel() }}
             </ox-button>
             <ox-button 
-              (click)="handleSubmit($event)">
+              (click)="handleSubmit($event)"
+              data-testid="dialog-submit-btn">
               {{ submitLabel() }}
             </ox-button>
           }

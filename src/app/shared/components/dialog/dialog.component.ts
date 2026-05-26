@@ -30,16 +30,16 @@ export class DialogComponent {
     public submitLabel: InputSignal<string> = input<string>('');
     public cancelLabel: InputSignal<string> = input<string>('');
     public isOpen: InputSignal<boolean> = input<boolean>(false);
-    private _open: WritableSignal<boolean> = signal<boolean>(false);
+    private readonly _open: WritableSignal<boolean> = signal<boolean>(false);
     protected open = computed(() => this._open() || this.isOpen());
 
     public closed: OutputEmitterRef<unknown> = output<unknown>();
     public cancelled: OutputEmitterRef<unknown> = output<unknown>();
     public submitted: OutputEmitterRef<unknown> = output<unknown>();
 
-    @ContentChild(DialogHeaderComponent) private header?: DialogHeaderComponent;
-    @ContentChild(DialogContentComponent) private content?: DialogContentComponent;
-    @ContentChild(DialogFooterComponent) private footer?: DialogFooterComponent;
+    @ContentChild(DialogHeaderComponent) private readonly header?: DialogHeaderComponent;
+    @ContentChild(DialogContentComponent) private readonly content?: DialogContentComponent;
+    @ContentChild(DialogFooterComponent) private readonly footer?: DialogFooterComponent;
 
     protected get hasHeader(): boolean {
         return !!this.header;
@@ -56,7 +56,7 @@ export class DialogComponent {
     @HostListener('document:keydown', ['$event'])
     onEscape(event: KeyboardEvent) {
         if (this.open() && event.key === 'Escape') {
-            this.handleCancel(event as unknown as Event);
+            this.handleCancel(event);
         }
     }
 

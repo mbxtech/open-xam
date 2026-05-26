@@ -1,11 +1,5 @@
-<button
-  (click)="toggleNav()"
-  class="fixed bottom-24 right-4 z-50 rounded-full bg-blue-600 text-white px-4 py-2 shadow-lg hover:bg-blue-700 transition"
->
-  {{ visible() ? 'Hide' : 'Show' }}
-</button>
 <div class="fixed bottom-0 left-0 right-0 bg-white dark:bg-neutral-900 shadow-lg z-40transition-transform duration-300 "
-[class.translate-y-full]="!visible()"
+[class.translate-y-full]="!(visible | async)"
 >
     <div class="container max-w-6xl mx-auto px-4 py-4">
         <div class="flex items-center justify-between gap-4">

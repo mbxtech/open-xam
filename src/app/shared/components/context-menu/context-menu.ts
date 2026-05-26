@@ -9,6 +9,7 @@ export interface ContextMenuItem<T> {
   action: (param?: T) => void;
   disabled?: boolean;
   divider?: boolean;
+  dataTestId?: string;
 }
 
 @Component({

@@ -8,7 +8,6 @@ OpenXam is a cross-platform exam simulation desktop application built with:
 - **Frontend**: Angular 21 with TailwindCSS 4
 - **Backend**: Rust with Tauri 2 (desktop framework)
 - **Database**: SQLite via Diesel ORM
-- **State Management**: @ngneat/elf
 
 ## Common Commands
 
@@ -18,23 +17,24 @@ npm run start           # Start Angular dev server (port 1420)
 npm run tauri:dev       # Start Tauri dev mode (Angular + Rust)
 
 # Building
-npm run build           # Build Angular only
-npm run tauri:build     # Build production Tauri app
-npm run tauri:build:debug  # Build debug Tauri app
+npm run build                 # Build Angular only
+npm run:tauri:build           # Build production Tauri app
+npm run:tauri:build:debug     # Build debug Tauri app
 
 # Testing
-npm run test            # Run Jest unit tests
+npm run test                                  # Run Jest unit tests
 npm run test -- --testPathPattern="filename"  # Run single test file
-npm run lint            # ESLint check
-npm run lint:fix        # ESLint auto-fix
+npm run lint                                  # ESLint check
+npm run lint:fix                              # ESLint auto-fix
 
 # Rust testing (from src-tauri/)
-cargo test              # Run Rust unit tests
-cargo llvm-cov --summary-only  # Rust test coverage
+cargo test                      # Run Rust unit tests
+cargo llvm-cov --summary-only   # Rust test coverage
 
 # E2E Tests (requires Docker)
-npm run test:e2e:docker # Run E2E in Docker container
-make docker-shell       # Debug shell in E2E container
+npm run test:e2e:docker             # Run E2E in Docker container
+npm run test:e2e:docker:build       # Build E2E Docker container
+npm run docker:clean:build-cache    # Clear Docker build cache
 ```
 
 ## Architecture
@@ -54,11 +54,15 @@ src/app/
 │   ├── service/        # Tauri IPC services
 │   ├── util/           # Utility functions and helpers
 │   ├── model/          # TypeScript interfaces
-│   └── pipes/          # Angular pipes
+│   ├── pipes/          # Angular pipes
+│   └── styles/         # Compouted styles
 └── app.routes.ts       # Route definitions
 ```
 
 **Component prefix**: `ox-` (e.g., `ox-button`, `ox-card`)
+## Code Guidlines Frontend
+- use single qutoes for strings and imports
+- preffer template strings instead of concationation
 
 ### Backend (src-tauri/src/)
 
@@ -67,7 +71,7 @@ Clean Architecture pattern:
 src-tauri/src/
 ├── presentation/       # Tauri invoke handlers (IPC endpoints)
 ├── application/
-│   ├── crud/           # CRUD operations
+│   ├── crud/           # CRUD operations traits
 │   └── usecase/        # Business logic use cases
 ├── domain/
 │   ├── entities/       # Database entities (Diesel)
@@ -79,6 +83,19 @@ src-tauri/src/
 │   ├── mapper/         # Entity <-> Model mapping
 │   └── filter/         # Query filters
 └── schema.rs           # Diesel schema (auto-generated)
+```
+
+### E2E Tests (e2e)
+```
+e2e/
+├── artifacts/          # Artifacts of e2e test results
+│   ├── logs/           # Test und Applicaton Logs
+│   ├── screenshotes /  # Scrennshots of failing Tests
+│   └── wdio-logs/      # WebdriverIO Logs
+├── specs/              # Test implementations
+├── workflows/          # Description of Applicaton workflows
+├── Dockerfile          # Dockerfile for running tests inside a Linux container
+└── wdio.conf.js        # WebdriverIO Configuration file
 ```
 
 ### Frontend-Backend Communication
@@ -99,8 +116,7 @@ pub fn get_exam(id: i32) -> Result<Exam, String>
 - **Angular i18n**: Uses `$localize` for translations (locale files in `src/locale/`)
 - **Diesel Migrations**: Located in `src-tauri/migrations/`
 - **Test Database**: `src-tauri/test-db/` for integration tests
-- **E2E**: Selenium with Mocha/Chai in Docker (see `e2e.md`)
-
+- **E2E**: WebdriverIO with Jestmatchers in Docker
 ## Database
 
 Diesel ORM with SQLite. Schema changes:

@@ -41,7 +41,7 @@ export class AbstractEdit {
     protected directActionDialogState: DirectActionDialogState = directActionDialogInitState;
     public formGroup: InputSignal<FormGroup> = input.required<FormGroup>();
     public formArrayName: InputSignal<string> = input.required<string>();
-    private _formBuilder: FormBuilder = inject(FormBuilder);
+    private readonly _formBuilder: FormBuilder = inject(FormBuilder);
 
     protected resetDialog(): void {
         this.actionDialogState = dialogInitState;

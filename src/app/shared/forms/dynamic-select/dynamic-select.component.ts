@@ -39,8 +39,8 @@ export class DynamicSelectComponent implements OnInit, ControlValueAccessor {
   value: any;
   onChange: any = () => {};
   onTouched: any = () => {};
-  selectControl = new FormControl();
-  protected baseClasses = [...inputBaseClasses, 'py-2'];
+  @Input() selectControl: FormControl = new FormControl();
+  protected baseClasses: string[] = [...inputBaseClasses, 'py-2'];
 
   constructor() {}
 

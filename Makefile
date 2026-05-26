@@ -1,4 +1,4 @@
-.PHONY: setup test test-coverage clean help
+re.PHONY: setup test test-coverage clean help
 
 # Default target
 help:

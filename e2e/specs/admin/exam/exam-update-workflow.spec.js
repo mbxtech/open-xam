@@ -1,5 +1,7 @@
 const scrollToBottom = async () => browser.execute(() => window.scrollTo(0, document.body.scrollHeight));
 
+const toggleStickyBottombar = async () => browser.execute(() => document.getElementById('toggle-sticky-bottombar').click());
+
 const addQuestion = async (index, typeLabel) => {
     await scrollToBottom();
 
@@ -40,16 +42,16 @@ describe('Exam Update Workflow', () => {
         await adminLink.click();
 
         await expect(browser).toHaveUrl(expect.stringContaining('/exam/overview'));
-        
+
         // Wait for list to load
         const h3 = await $('h3');
-        await h3.waitForExist({ timeout: 10000 });
+        await h3.waitForExist({timeout: 10000});
     });
 
     it('should click on exam update button (Step 3-4)', async () => {
         // Find the first exam card's edit button
         const updateBtn = await $('ox-button[title="Edit"] button, ox-button button fa-icon[icon*="pencil"]');
-        await updateBtn.waitForExist({ timeout: 5000 });
+        await updateBtn.waitForExist({timeout: 5000});
         await updateBtn.click();
 
         await expect(browser).toHaveUrl(expect.stringContaining('/exam/edit'));
@@ -69,14 +71,35 @@ describe('Exam Update Workflow', () => {
     });
 
     it('should add a new question (Step 7)', async () => {
+        await toggleStickyBottombar();
         const currentQuestionsCount = (await $$('ox-card[id^="question-"]')).length;
-        await addQuestion(currentQuestionsCount, 'Single choice');
-        
-        const newQuestion = await $(`#question-${currentQuestionsCount}`);
-        await expect(newQuestion).toBeDisplayed();
+        const questionSingleChoice = await addQuestion(currentQuestionsCount, 'Single choice');
+        const qscAddAnswerBtn = await questionSingleChoice.$('button=Add answer');
+        await qscAddAnswerBtn.click();
+        const qscAnswer1 = await questionSingleChoice.$('ox-answer-form form:nth-child(1) textarea');
+        await qscAnswer1.setValue('Correct Answer');
+
+        await qscAddAnswerBtn.click();
+        const q1Answer2 = await questionSingleChoice.$('ox-answer-form form:nth-child(2) textarea');
+        await q1Answer2.setValue('Wrong Answer');
+
+        await scrollToBottom();
+
+        const qscCorrectRadio = await questionSingleChoice.$(
+            'ox-answer-form form:nth-child(1) label[data-testid="single-choice-is-correct-label"]'
+        );
+        await qscCorrectRadio.scrollIntoView({block: 'center'});
+        await qscCorrectRadio.waitForClickable({timeout: 5000});
+        await qscCorrectRadio.click();
+
+
+        await browser.saveScreenshot('./artifacts/screenshots/should add a new question (Step 7).png');
+
+        await toggleStickyBottombar();
     });
 
     it('should delete an existing question (Step 8-10)', async () => {
+
         const questionToDelete = await $('#question-0');
         await questionToDelete.scrollIntoView();
 
@@ -85,20 +108,20 @@ describe('Exam Update Workflow', () => {
         await contextMenuBtn.click();
 
         const deleteBtn = await $('[data-testid="delete-question-btn"]');
-        await deleteBtn.waitForDisplayed({ timeout: 5000 });
+        await deleteBtn.waitForDisplayed({timeout: 5000});
         await deleteBtn.click();
 
         // Dialog opens
-        const dialog = await $('ox-dialog[title="Delete question"]');
-        await dialog.waitForDisplayed({ timeout: 5000 });
-        
+        const dialog = await $('#direct-delete-action-dialog-title');
+        await dialog.waitForDisplayed({timeout: 5000});
+
         // Confirm deletion
         const confirmBtn = await $('[data-testid="dialog-submit-btn"] button');
-        await confirmBtn.waitForDisplayed({ timeout: 5000 });
+        await confirmBtn.waitForDisplayed({timeout: 5000});
         await confirmBtn.click();
 
         // Verify it's gone (or at least dialog closed and no errors)
-        await dialog.waitForDisplayed({ reverse: true, timeout: 5000 });
+        await dialog.waitForDisplayed({reverse: true, timeout: 5000});
     });
 
     it('should see no errors (Step 11)', async () => {
@@ -129,13 +152,13 @@ describe('Exam Update Workflow', () => {
                 }
                 return false;
             },
-            { timeout: 10000, interval: 500 }
+            {timeout: 10000, interval: 500}
         );
 
         await expect(toastElement).toBeDisplayed();
         const toastTitle = await toastElement.$('#toast-title-0');
         await expect(toastTitle).toHaveText('Edit Exam result');
-        
+
         const toastMessage = await toastElement.$('#toast-message-0');
         await expect(toastMessage).toHaveText(
             expect.stringContaining('Successfully updated exam')

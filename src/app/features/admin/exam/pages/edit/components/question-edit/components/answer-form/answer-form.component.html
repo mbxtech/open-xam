@@ -35,7 +35,7 @@
 
                 @switch (questionTypeSignal()) {
                     @case ('MULTIPLE_CHOICE') {
-                        <ox-checkbox formControlName="isCorrect"
+                        <ox-checkbox [formControl]="getControl('isCorrect', i)"
                                      i18n-label="@@ox.administration.edit.answer.label.isCorrect"
                                      label="Correct"
                                      id="is-correct-checkbox"
@@ -54,6 +54,7 @@
                      peer-checked:border-blue-600 peer-checked:bg-blue-600
                      peer-focus:ring-2 peer-focus:ring-blue-200 peer-focus:ring-offset-2
                      hover:border-blue-400"
+                                       data-testid="single-choice-is-correct-label"
                                        (click)="handleCorrectAnswerCheckBoxState(i)"
                                 >
                                     <div class="w-2 h-2 rounded-full bg-white transition-transform"

@@ -121,14 +121,14 @@
                                             label="Question Text"
                                             type="textarea"/>
 
-                            <ox-dynamic-select [options]="questionTypes" formControlName="type" label="Question Type"
+                            <ox-dynamic-select [options]="questionTypes" [selectControl]="getControl('type', i)"  label="Question Type"
                                                i18n-label="@@ox.administration.edit.question.questionType"
                                                i18n-placeholder="@@ox.administration.edit.question.questionTypePlaceholder"
                                                id="question-type-select"
                                                placeholder="Question Type" [required]="true"/>
                             <ox-category-select [formGroup]="getCategoryGroup(i)"/>
 
-                            <div data-orientation="horizontal" role="none" data-slot="separator-root"
+                            <div data-orientation="horizontal" role="separator" data-slot="separator-root"
                                  class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px">
                             </div>
                             @if (getQuestionType(i) === QuestionType.ASSIGNMENT) {
@@ -160,7 +160,7 @@
            [title]="actionDialogState.title" [submitLabel]="actionDialogState.submitLabel"
            [cancelLabel]="actionDialogState.abortLabel">
     <ox-dialog-header>
-        <h5 class="text-lg font-semibold text-gray-900">{{ actionDialogState.title }}</h5>
+        <h5 class="text-lg font-semibold text-gray-900" id="question-action-dialog-title">{{ actionDialogState.title }}</h5>
     </ox-dialog-header>
     <ox-dialog-content>
         <p>{{ actionDialogState.message }}</p>
@@ -172,11 +172,11 @@
            [title]="directActionDialogState.title" [submitLabel]="directActionDialogState.submitLabel"
            [cancelLabel]="directActionDialogState.abortLabel">
     <ox-dialog-header>
-        <h5 class="text-lg font-semibold text-gray-900">{{ directActionDialogState.title }}</h5>
+        <h5 class="text-lg font-semibold text-gray-900" id="direct-delete-action-dialog-title">{{ directActionDialogState.title }}</h5>
     </ox-dialog-header>
     <ox-dialog-content>
         <p>{{ directActionDialogState.message }}</p>
-        <ox-button variant="destructive" (click)="directActionDialogState.onAction($event)">
+        <ox-button variant="destructive" id="question-delete-directly" (click)="directActionDialogState.onAction($event)">
             {{ directActionDialogState.actionBtnLabel }}
         </ox-button>
     </ox-dialog-content>

@@ -24,7 +24,7 @@ impl QuestionUseCase {
             QuestionUseCase::validate_fks(question_to_update)?;
             question_to_update
                 .validate_answers()
-                .map_err(|e| CRUDError::new("Validation errors: ", Some(e)))?;
+                .map_err(|e| CRUDError::new("Answer validation errors: ", Some(e)))?;
             question_to_update
                 .validate_options(true)
                 .map_err(|e| CRUDError::new("AssignmentOptions validation errors: ", Some(e)))?;
