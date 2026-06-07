@@ -1,42 +1,4 @@
-const scrollToBottom = async () => browser.execute(() => window.scrollTo(0, document.body.scrollHeight));
-
-const addQuestion = async (index, typeLabel) => {
-    await scrollToBottom();
-
-    await browser.execute(() => {
-        document.getElementById('add-question-btn').click();
-    });
-
-    const questionCard = await $(`#question-${index}`);
-    await questionCard.waitForExist({timeout: 5000});
-
-    const pointsTotalInput = await questionCard.$('ox-basic-input[label="Points"] input');
-    await pointsTotalInput.setValue(10);
-
-    const questionTextInput = await questionCard.$('ox-basic-input[label="Question Text"] textarea');
-    await questionTextInput.setValue(`Test Question ${index + 1} (${typeLabel})`);
-
-    const addAnswerBtn = await questionCard.$('ox-button button[data-testid="add-answer-btn"]');
-    await addAnswerBtn.scrollIntoView();
-
-    const typeSelect = await questionCard.$('ox-dynamic-select[label="Question Type"] select');
-    const options = await typeSelect.$$('option');
-    let optionToSelect;
-    for (const option of options) {
-        if (await option.getText() === typeLabel) {
-            optionToSelect = option;
-            break;
-        }
-    }
-    if (optionToSelect) {
-        await optionToSelect.click();
-    } else {
-        throw new Error(`Option with label ${typeLabel} not found`);
-    }
-
-    return questionCard;
-};
-
+import {toggleStickyBottombar, addQuestion, scrollToBottom} from '../../utils';
 
 describe('Exam Workflow', () => {
     it('should navigate to exam overview', async () => {
@@ -72,6 +34,7 @@ describe('Exam Workflow', () => {
     });
 
     it('should add question type single choice', async () => {
+        await toggleStickyBottombar();
         const questionSingleChoice = await addQuestion(0, 'Single choice');
         const qscAddAnswerBtn = await questionSingleChoice.$('button=Add answer');
         await qscAddAnswerBtn.click();
@@ -131,6 +94,7 @@ describe('Exam Workflow', () => {
     });
 
     it('should save exam and navigate to overview', async () => {
+        await toggleStickyBottombar();
         const saveBtn = await $('ox-sticky-bottom-bar').$('button=Save');
         await expect(saveBtn).toBeEnabled();
         await saveBtn.click();

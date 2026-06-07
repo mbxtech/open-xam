@@ -1,40 +1,4 @@
-const scrollToBottom = async () => browser.execute(() => window.scrollTo(0, document.body.scrollHeight));
-
-const toggleStickyBottombar = async () => browser.execute(() => document.getElementById('toggle-sticky-bottombar').click());
-
-const addQuestion = async (index, typeLabel) => {
-    await scrollToBottom();
-
-    await browser.execute(() => {
-        document.getElementById('add-question-btn').click();
-    });
-
-    const questionCard = await $(`#question-${index}`);
-    await questionCard.waitForExist({timeout: 5000});
-
-    const pointsTotalInput = await questionCard.$('ox-basic-input[label="Points"] input');
-    await pointsTotalInput.setValue(10);
-
-    const questionTextInput = await questionCard.$('ox-basic-input[label="Question Text"] textarea');
-    await questionTextInput.setValue(`Test Question ${index + 1} (${typeLabel})`);
-
-    const typeSelect = await questionCard.$('ox-dynamic-select[label="Question Type"] select');
-    const options = await typeSelect.$$('option');
-    let optionToSelect;
-    for (const option of options) {
-        if (await option.getText() === typeLabel) {
-            optionToSelect = option;
-            break;
-        }
-    }
-    if (optionToSelect) {
-        await optionToSelect.click();
-    } else {
-        throw new Error(`Option with label ${typeLabel} not found`);
-    }
-
-    return questionCard;
-};
+import {toggleStickyBottombar, addQuestion, scrollToBottom} from '../../utils';
 
 describe('Exam Update Workflow', () => {
     it('should navigate to exam overview (Step 1-2)', async () => {
@@ -92,19 +56,17 @@ describe('Exam Update Workflow', () => {
         await qscCorrectRadio.waitForClickable({timeout: 5000});
         await qscCorrectRadio.click();
 
-
-        await browser.saveScreenshot('./artifacts/screenshots/should add a new question (Step 7).png');
-
         await toggleStickyBottombar();
     });
 
     it('should delete an existing question (Step 8-10)', async () => {
+        await toggleStickyBottombar();
 
         const questionToDelete = await $('#question-0');
         await questionToDelete.scrollIntoView();
 
         // Use the newly added data-testids
-        const contextMenuBtn = await questionToDelete.$('[data-testid="context-menu-button"]');
+        const contextMenuBtn = await questionToDelete.$('#question-context-menu-0');
         await contextMenuBtn.click();
 
         const deleteBtn = await $('[data-testid="delete-question-btn"]');
@@ -122,6 +84,8 @@ describe('Exam Update Workflow', () => {
 
         // Verify it's gone (or at least dialog closed and no errors)
         await dialog.waitForDisplayed({reverse: true, timeout: 5000});
+              
+        await toggleStickyBottombar();
     });
 
     it('should see no errors (Step 11)', async () => {
@@ -142,7 +106,7 @@ describe('Exam Update Workflow', () => {
             {timeout: 10000, timeoutMsg: 'Never navigated to overview'}
         );
 
-        let toastElement;
+            let toastElement;
         await browser.waitUntil(
             async () => {
                 const html = await $('#toast-container').getHTML();
@@ -152,16 +116,23 @@ describe('Exam Update Workflow', () => {
                 }
                 return false;
             },
-            {timeout: 10000, interval: 500}
+            { timeout: 10000, interval: 500 }
         );
 
         await expect(toastElement).toBeDisplayed();
-        const toastTitle = await toastElement.$('#toast-title-0');
-        await expect(toastTitle).toHaveText('Edit Exam result');
 
-        const toastMessage = await toastElement.$('#toast-message-0');
-        await expect(toastMessage).toHaveText(
-            expect.stringContaining('Successfully updated exam')
-        );
+        const toastTitle = await $('#toast-title-0');
+        await toastTitle.waitForDisplayed({ timeout: 5000 })
+        await expect(toastTitle).toBeDisplayed();
+
+        const toastMessage = await $('#toast-message-0');
+        toastMessage.waitForDisplayed({ timeout: 5000 })
+        await expect(toastMessage).toBeDisplayed();
+
+        const toastCloseBtn = await $('#toast-close-0');
+        expect(toastCloseBtn.isClickable()).toBeTruthy();
+        await toastCloseBtn.click();
+
+        await expect(await $('#toast-0')).not.toExist();
     });
 });

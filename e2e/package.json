@@ -7,7 +7,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "test": "wdio run wdio.conf.js"
+    "test": "rm -rf ./artifacts/logs && rm -rf ./artifacts/logs && wdio run wdio.conf.js"
   },
   "dependencies": {
     "@wdio/cli": "^9.19.0"
