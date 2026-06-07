@@ -3,7 +3,9 @@ import {
     ElementRef,
     HostListener,
     inject,
+    input,
     Input,
+    InputSignal,
     OnDestroy,
     OnInit,
     signal,
@@ -111,6 +113,8 @@ export class QuestionEditComponent extends AbstractEdit implements OnDestroy, On
 
     @Input({ required: true })
     public questionArray!: FormArray;
+
+    public examId: InputSignal<number | null | undefined> = input();
 
     @HostListener('window:scroll', ['$event'])
     onWindowScroll(_event: Event): void {
@@ -364,7 +368,7 @@ export class QuestionEditComponent extends AbstractEdit implements OnDestroy, On
             },
         ]);
 
-        this.questionArray.push(this.addQuestion(question));
+        this.questionArray.push(this.addQuestion(question, this.examId()));
     }
 
     public getQuestionValue(q: IQuestion): IQuestion {

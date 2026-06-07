@@ -1,115 +1,183 @@
 {
-  "examToCreate": {
-    "id": null,
-    "name": "Workflow Test Exam",
-    "description": "An exam with all question types created by automated test.",
-    "pointsToSucceeded": 10,
-    "maxQuestionsRealExam": 4,
+    "id": 18,
+    "name": "Test Exam",
+    "description": "",
+    "pointsToSucceeded": 1000,
+    "maxQuestionsRealExam": 30,
     "createdAt": null,
     "updatedAt": null,
     "category": null,
     "questions": [
-      {
-        "id": null,
-        "questionText": "Test Question 1 (Single choice)",
-        "pointsTotal": 10,
-        "type": "SINGLE_CHOICE",
-        "answers": [
-          {
-            "id": null,
-            "answerText": "Correct Answer",
-            "description": null,
-            "isCorrect": true,
+        {
+            "id": 247,
+            "questionText": "Is this correct?",
+            "pointsTotal": 100,
+            "type": "SINGLE_CHOICE",
+            "answers": [
+                {
+                    "id": 1131,
+                    "answerText": "Is Yes Update",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": -1,
+                    "questionId": 247
+                },
+                {
+                    "id": 1132,
+                    "answerText": "Is not",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": -1,
+                    "questionId": 247
+                },
+                {
+                    "id": 1140,
+                    "answerText": "New Update",
+                    "description": null,
+                    "isCorrect": true,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": -1,
+                    "questionId": 247
+                }
+            ],
+            "pointsPerCorrectAnswer": 50,
+            "category": null,
             "createdAt": null,
             "updatedAt": null,
-            "assignedOptionId": -1,
-            "questionId": null
-          },
-          {
-            "id": null,
-            "answerText": "Wrong Answer",
-            "description": null,
-            "isCorrect": false,
+            "options": [],
+            "examId": 18
+        },
+        {
+            "id": 248,
+            "questionText": "Multiple Choice",
+            "pointsTotal": 100,
+            "type": "MULTIPLE_CHOICE",
+            "answers": [
+                {
+                    "id": 1133,
+                    "answerText": "Answer 1",
+                    "description": null,
+                    "isCorrect": true,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": -1,
+                    "questionId": 248
+                },
+                {
+                    "id": 1134,
+                    "answerText": "Answer 2",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": -1,
+                    "questionId": 248
+                }
+            ],
+            "pointsPerCorrectAnswer": 10,
+            "category": null,
             "createdAt": null,
             "updatedAt": null,
-            "assignedOptionId": -1,
-            "questionId": null
-          }
-        ],
-        "pointsPerCorrectAnswer": 0,
-        "category": null,
-        "createdAt": null,
-        "updatedAt": null,
-        "options": [],
-        "examId": 0
-      },
-      {
-        "id": null,
-        "questionText": "Test Question 2 (Multiple choice)",
-        "pointsTotal": 10,
-        "type": "MULTIPLE_CHOICE",
-        "answers": [
-          {
-            "id": null,
-            "answerText": "Correct Answer 1",
-            "description": null,
-            "isCorrect": false,
+            "options": [],
+            "examId": 18
+        },
+        {
+            "id": 249,
+            "questionText": "Assignment",
+            "pointsTotal": 100,
+            "type": "ASSIGNMENT",
+            "answers": [
+                {
+                    "id": 1136,
+                    "answerText": "Value 1 O 1",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": 1,
+                    "questionId": 249
+                },
+                {
+                    "id": 1137,
+                    "answerText": "Value 2 O 1",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": 1,
+                    "questionId": 249
+                },
+                {
+                    "id": 1138,
+                    "answerText": "Fgdfgfdg",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": 2,
+                    "questionId": 249
+                },
+                {
+                    "id": 1139,
+                    "answerText": "Aassssfdf",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": 2,
+                    "questionId": 249
+                }
+            ],
+            "pointsPerCorrectAnswer": 10,
+            "category": null,
             "createdAt": null,
             "updatedAt": null,
-            "assignedOptionId": -1,
-            "questionId": null
-          },
-          {
+            "options": [
+                { "id": 1, "text": "Option 1", "questionId": 249, "rowId": 115 },
+                { "id": 2, "text": "Option 2", "questionId": 249, "rowId": 116 }
+            ],
+            "examId": 18
+        },
+        {
             "id": null,
-            "answerText": "Correct Answer 2",
-            "description": null,
-            "isCorrect": false,
+            "questionText": "Sdafsdafdsaf",
+            "pointsTotal": 10,
+            "type": "SINGLE_CHOICE",
+            "answers": [
+                {
+                    "id": null,
+                    "answerText": "Sadfasdf",
+                    "description": null,
+                    "isCorrect": true,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": null,
+                    "questionId": null
+                },
+                {
+                    "id": null,
+                    "answerText": "Sadfsadf",
+                    "description": null,
+                    "isCorrect": false,
+                    "createdAt": null,
+                    "updatedAt": null,
+                    "assignedOptionId": null,
+                    "questionId": null
+                }
+            ],
+            "pointsPerCorrectAnswer": 10,
+            "category": null,
             "createdAt": null,
             "updatedAt": null,
-            "assignedOptionId": -1,
-            "questionId": null
-          }
-        ],
-        "pointsPerCorrectAnswer": 0,
-        "category": null,
-        "createdAt": null,
-        "updatedAt": null,
-        "options": [],
-        "examId": 0
-      },
-      {
-        "id": null,
-        "questionText": "Test Question 3 (Assigment)",
-        "pointsTotal": 10,
-        "type": "ASSIGNMENT",
-        "answers": [
-          {
-            "id": null,
-            "answerText": "Definition 1",
-            "description": null,
-            "isCorrect": false,
-            "createdAt": null,
-            "updatedAt": null,
-            "assignedOptionId": 1,
-            "questionId": 1
-          }
-        ],
-        "pointsPerCorrectAnswer": 0,
-        "category": null,
-        "createdAt": null,
-        "updatedAt": null,
-        "options": [
-          {
-            "id": 1,
-            "text": "Term 1",
-            "questionId": null,
-            "rowId": null
-          }
-        ],
-        "examId": 0
-      }
+            "options": [],
+            "examId": 0
+        }
     ],
     "statusType": "DRAFT",
-    "duration": 60
-  }
+    "duration": 30
 }

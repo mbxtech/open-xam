@@ -196,7 +196,7 @@ describe('QuestionEditComponent', () => {
 
             expect(component['questionArray'].length).toBe(2);
             expect(component['_currentSelectedQuestionType']().length).toBe(1);
-            expect(addQuestionSpy).toHaveBeenCalledWith(undefined);
+            expect(addQuestionSpy).toHaveBeenCalledWith(undefined, undefined);
         });
 
         it('should add question default button', () => {
@@ -213,7 +213,7 @@ describe('QuestionEditComponent', () => {
 
             expect(component['questionArray'].length).toBe(2);
             expect(component['_currentSelectedQuestionType']().length).toBe(1);
-            expect(addQuestionSpy).toHaveBeenCalledWith(undefined);
+            expect(addQuestionSpy).toHaveBeenCalledWith(undefined, undefined);
         });
     });
 

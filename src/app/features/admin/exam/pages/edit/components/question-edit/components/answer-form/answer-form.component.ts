@@ -7,36 +7,27 @@ import {
     InputSignal,
     OnDestroy,
 } from '@angular/core';
-import {
-    FormArray,
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-} from '@angular/forms';
-import {FaIconComponent} from '@fortawesome/angular-fontawesome';
-import {
-    faAdd,
-    faFloppyDisk,
-    faTrash,
-} from '@fortawesome/free-solid-svg-icons';
-import {Subscription} from 'rxjs';
-import {ButtonComponent} from '../../../../../../../../../shared/components/button/button.component';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faAdd, faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { ButtonComponent } from '../../../../../../../../../shared/components/button/button.component';
 import {
     ContextMenu,
     ContextMenuItem,
 } from '../../../../../../../../../shared/components/context-menu/context-menu';
-import {DialogContentComponent} from '../../../../../../../../../shared/components/dialog/dialog-content.component';
-import {DialogHeaderComponent} from '../../../../../../../../../shared/components/dialog/dialog-header.component';
-import {DialogComponent} from '../../../../../../../../../shared/components/dialog/dialog.component';
-import {BasicInputComponent} from '../../../../../../../../../shared/forms/basic-input/basic-input.component';
-import {Checkbox} from '../../../../../../../../../shared/forms/checkbox/checkbox';
-import {IAnswer} from '../../../../../../../../../shared/model/interfaces/answer.interface';
-import {QuestionType} from '../../../../../../../../../shared/model/question-type.enum';
-import {AnswersService} from '../../../../../../../../../shared/service/answers.service';
-import {ToastService} from '../../../../../../../../../shared/service/toast.service';
+import { DialogContentComponent } from '../../../../../../../../../shared/components/dialog/dialog-content.component';
+import { DialogHeaderComponent } from '../../../../../../../../../shared/components/dialog/dialog-header.component';
+import { DialogComponent } from '../../../../../../../../../shared/components/dialog/dialog.component';
+import { BasicInputComponent } from '../../../../../../../../../shared/forms/basic-input/basic-input.component';
+import { Checkbox } from '../../../../../../../../../shared/forms/checkbox/checkbox';
+import Answer from '../../../../../../../../../shared/model/classes/answer.class';
+import { IAnswer } from '../../../../../../../../../shared/model/interfaces/answer.interface';
+import { QuestionType } from '../../../../../../../../../shared/model/question-type.enum';
+import { AnswersService } from '../../../../../../../../../shared/service/answers.service';
+import { ToastService } from '../../../../../../../../../shared/service/toast.service';
 import Logger from '../../../../../../../../../shared/util/Logger';
-import {AbstractEdit} from '../abstract-edit/abstract-edit';
-import Answer from "../../../../../../../../../shared/model/classes/answer.class";
+import { AbstractEdit } from '../abstract-edit/abstract-edit';
 
 @Component({
     selector: 'ox-answer-form',
@@ -56,7 +47,7 @@ import Answer from "../../../../../../../../../shared/model/classes/answer.class
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
-    private readonly _logger: Logger = new Logger('AnswerComponent');
+    private readonly _logger: Logger = Logger.getInstance('AnswerComponent');
 
     private readonly _answerService = inject(AnswersService);
     private readonly _toastService = inject(ToastService);
@@ -70,7 +61,7 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
             label: $localize`:@@ox.general.btn.delete:Delete`,
             icon: faTrash,
             dataTestId: 'delete-answer',
-            action: (param) => {
+            action: param => {
                 if (typeof param === 'string' && param !== '') {
                     this.deleteAnswer(param);
                 }
@@ -80,7 +71,7 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
             label: $localize`:@@ox.general.btn.save:Save`,
             icon: faFloppyDisk,
             dataTestId: 'save-answer',
-            action: (param) => {
+            action: param => {
                 if (typeof param === 'string' && param !== '') {
                     this.saveAnswer(param);
                 }
@@ -88,34 +79,32 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
         },
     ];
 
-    public readonly questionType: InputSignal<QuestionType> =
-        input.required<QuestionType>();
-    public readonly assignedOptionId: InputSignal<number> = input<number>(-1);
+    public readonly questionType: InputSignal<QuestionType> = input.required<QuestionType>();
+    public readonly assignedOptionId: InputSignal<number | undefined> = input<number | undefined>();
 
-    @Input({required: true})
+    @Input({ required: true })
     public answerArray: FormArray<FormGroup> = new FormArray<FormGroup>([]);
 
     constructor() {
         super();
 
         this._subscription$.add(
-            this._answerService.errors$.subscribe((errors) => {
+            this._answerService.errors$.subscribe(errors => {
                 if (errors.length) {
-                    errors.forEach((err) => {
+                    errors.forEach(err => {
                         this._toastService.addErrorToast(
                             $localize`:@@ox.administration.edit.answer.action.error.title:Error during Answer action`,
-                            err,
+                            err
                         );
                     });
                 }
-            }),
+            })
         );
     }
 
     ngOnDestroy(): void {
         this._subscription$.unsubscribe();
     }
-
 
     public deleteAnswer(internalId: string): void {
         const grp = this._getGrpByInternalId(this.answerArray, internalId);
@@ -140,7 +129,7 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
                 onAction: () => {
                     this._deleteAnswerById(
                         grp.get('id')!.value,
-                        this.answerArray.controls.indexOf(grp),
+                        this.answerArray.controls.indexOf(grp)
                     );
                 },
             });
@@ -163,7 +152,7 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
 
     public saveAnswer(internalId: string): void {
         const grp = this._getGrpByInternalId(this.answerArray, internalId);
-        const hasQuestionId = this._validateQuestionId(grp)
+        const hasQuestionId = this._validateQuestionId(grp);
         if (!grp || !hasQuestionId) {
             return;
         }
@@ -185,38 +174,38 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
         if (answer.id) {
             answer.id = Number(answer.id);
             this._subscription$.add(
-                this._answerService.updateAnswer(new Answer(answer)).subscribe((res) => {
+                this._answerService.updateAnswer(new Answer(answer)).subscribe(res => {
                     if (res?.id) {
                         this._addSuccessToast(
-                            $localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer was updated successfully`,
+                            $localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer was updated successfully`
                         );
                     }
-                }),
+                })
             );
         } else {
             this._subscription$.add(
-                this._answerService.createAnswer(new Answer(answer)).subscribe((res) => {
+                this._answerService.createAnswer(new Answer(answer)).subscribe(res => {
                     if (res?.id) {
                         this._addSuccessToast(
-                            $localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer was created successfully`,
+                            $localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer was created successfully`
                         );
                     }
-                }),
+                })
             );
         }
     }
 
     private _deleteAnswerById(id: number, index: number): void {
         this._subscription$.add(
-            this._answerService.deleteAnswerById(id).subscribe((res) => {
+            this._answerService.deleteAnswerById(id).subscribe(res => {
                 if (res) {
                     this._addSuccessToast(
-                        $localize`:@@ox.administration.edit.answer.delete.message:Answer with id: ${id} was deleted successfully.`,
+                        $localize`:@@ox.administration.edit.answer.delete.message:Answer with id: ${id} was deleted successfully.`
                     );
                     this.answerArray.removeAt(index);
                     this.resetDialog();
                 }
-            }),
+            })
         );
     }
 
@@ -241,23 +230,18 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
         }
     }
 
-    protected handleContextMenuAction(
-        item: ContextMenuItem<string>,
-        internalId: string,
-    ): void {
+    protected handleContextMenuAction(item: ContextMenuItem<string>, internalId: string): void {
         item.action(internalId);
     }
 
     protected addAnswer(): void {
-        this.answerArray.push(
-            this.addAnswerFormGroup(undefined, this.assignedOptionId()),
-        );
+        this.answerArray.push(this.addAnswerFormGroup(undefined, this.assignedOptionId()));
     }
 
     protected getAnswerControls(): FormGroup[] {
         if (this.questionType() === QuestionType.ASSIGNMENT) {
-            return this.answerArray.controls.filter((ctrl) => {
-                const ctrlValue = Number(ctrl.get('assignedOptionId')?.value) || -1;
+            return this.answerArray.controls.filter(ctrl => {
+                const ctrlValue = Number(ctrl.get('assignedOptionId')?.value);
                 return ctrlValue === this.assignedOptionId();
             });
         }
