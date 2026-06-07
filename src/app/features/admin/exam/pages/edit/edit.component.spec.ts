@@ -1,13 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EditComponent } from './edit.component';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import { ExamService } from '../../../../../shared/service/exam.service';
 import { ToastService } from '../../../../../shared/service/toast.service';
 import { ImportCacheService } from '../../../../../shared/service/import-cache.service';
 import { CategoryService } from '../../../../../shared/service/category.service';
 import { of, BehaviorSubject } from 'rxjs';
 import { StatusType } from '../../../../../shared/model/status-typ.enum';
+import {EditComponent} from './edit.component';
+import {RouterTestingHarness} from '@angular/router/testing';
+import {SidebarService} from '../../../admin-page-layout/service/sidebar.service';
 
 describe('EditComponent', () => {
   let component: EditComponent;
@@ -19,6 +21,7 @@ describe('EditComponent', () => {
   let importCacheServiceMock: any;
   let categoryServiceMock: any;
   let errorsSubject: BehaviorSubject<any[]>;
+  let sidebarServiceMock: any;
 
   beforeEach(async () => {
     errorsSubject = new BehaviorSubject<any[]>([]);
@@ -58,6 +61,12 @@ describe('EditComponent', () => {
       errors$: of([])
     };
 
+    sidebarServiceMock = {
+      toggleStickyBottombar: jest.fn(),
+      bottombarVisible$: jest.fn(),
+      isExamEditPage: jest.fn()
+    }
+
     await TestBed.configureTestingModule({
       imports: [EditComponent, ReactiveFormsModule],
       providers: [
@@ -67,7 +76,8 @@ describe('EditComponent', () => {
         { provide: Router, useValue: routerMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
         { provide: ImportCacheService, useValue: importCacheServiceMock },
-        { provide: CategoryService, useValue: categoryServiceMock }
+        { provide: CategoryService, useValue: categoryServiceMock },
+        { provide: SidebarService, useValue: sidebarServiceMock }
       ]
     })
     .compileComponents();

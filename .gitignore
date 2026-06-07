@@ -34,3 +34,4 @@ scripts
 artifacts
 .dep-checker
 .junie
+backups/*

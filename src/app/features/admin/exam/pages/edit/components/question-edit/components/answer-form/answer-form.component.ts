@@ -1,31 +1,42 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    effect,
     inject,
+    Input,
     input,
     InputSignal,
     OnDestroy,
-    signal,
-    WritableSignal
 } from '@angular/core';
-import {FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {
+    FormArray,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+} from '@angular/forms';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
-import {faAdd, faFloppyDisk, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {
+    faAdd,
+    faFloppyDisk,
+    faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import {Subscription} from 'rxjs';
 import {ButtonComponent} from '../../../../../../../../../shared/components/button/button.component';
-import {ContextMenu, ContextMenuItem} from '../../../../../../../../../shared/components/context-menu/context-menu';
+import {
+    ContextMenu,
+    ContextMenuItem,
+} from '../../../../../../../../../shared/components/context-menu/context-menu';
 import {DialogContentComponent} from '../../../../../../../../../shared/components/dialog/dialog-content.component';
 import {DialogHeaderComponent} from '../../../../../../../../../shared/components/dialog/dialog-header.component';
 import {DialogComponent} from '../../../../../../../../../shared/components/dialog/dialog.component';
 import {BasicInputComponent} from '../../../../../../../../../shared/forms/basic-input/basic-input.component';
+import {Checkbox} from '../../../../../../../../../shared/forms/checkbox/checkbox';
 import {IAnswer} from '../../../../../../../../../shared/model/interfaces/answer.interface';
 import {QuestionType} from '../../../../../../../../../shared/model/question-type.enum';
 import {AnswersService} from '../../../../../../../../../shared/service/answers.service';
 import {ToastService} from '../../../../../../../../../shared/service/toast.service';
+import Logger from '../../../../../../../../../shared/util/Logger';
 import {AbstractEdit} from '../abstract-edit/abstract-edit';
-import {Checkbox} from "../../../../../../../../../shared/forms/checkbox/checkbox";
-
+import Answer from "../../../../../../../../../shared/model/classes/answer.class";
 
 @Component({
     selector: 'ox-answer-form',
@@ -38,13 +49,15 @@ import {Checkbox} from "../../../../../../../../../shared/forms/checkbox/checkbo
         ButtonComponent,
         DialogContentComponent,
         DialogHeaderComponent,
-        Checkbox
+        Checkbox,
     ],
     templateUrl: './answer-form.component.html',
     styleUrl: './answer-form.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
+    private readonly _logger: Logger = new Logger('AnswerComponent');
+
     private readonly _answerService = inject(AnswersService);
     private readonly _toastService = inject(ToastService);
 
@@ -52,59 +65,38 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
     private readonly _subscription$: Subscription = new Subscription();
 
     protected readonly QuestionType = QuestionType;
-    protected readonly contextMenuItems: ContextMenuItem<number>[] = [
+    protected readonly contextMenuItems: ContextMenuItem<string>[] = [
         {
             label: $localize`:@@ox.general.btn.delete:Delete`,
             icon: faTrash,
+            dataTestId: 'delete-answer',
             action: (param) => {
-                if (typeof param === 'number' && param >= 0) {
+                if (typeof param === 'string' && param !== '') {
                     this.deleteAnswer(param);
                 }
-            }
+            },
         },
         {
             label: $localize`:@@ox.general.btn.save:Save`,
             icon: faFloppyDisk,
+            dataTestId: 'save-answer',
             action: (param) => {
-                if (typeof param === 'number' && param >= 0) {
+                if (typeof param === 'string' && param !== '') {
                     this.saveAnswer(param);
                 }
-            }
-        }
+            },
+        },
     ];
 
-    protected readonly questionTypeSignal: WritableSignal<QuestionType> = signal<QuestionType>(QuestionType.SINGLE_CHOICE);
-    public readonly questionType: InputSignal<QuestionType> = input.required<QuestionType>();
-    public readonly currentAnswers: InputSignal<IAnswer[]> = input<IAnswer[]>([]);
+    public readonly questionType: InputSignal<QuestionType> =
+        input.required<QuestionType>();
     public readonly assignedOptionId: InputSignal<number> = input<number>(-1);
+
+    @Input({required: true})
+    public answerArray: FormArray<FormGroup> = new FormArray<FormGroup>([]);
 
     constructor() {
         super();
-        effect(() => {
-            const qType = this.questionType();
-            this.questionTypeSignal.set(qType);
-            const inputAnswers = this.currentAnswers();
-
-            this.formArray.clear({emitEvent: false});
-
-            if (inputAnswers && inputAnswers.length) {
-                if (qType === QuestionType.ASSIGNMENT) {
-                    inputAnswers.filter(answers => answers.assignedOptionId === this.assignedOptionId())
-                        .forEach(answer => this.formArray.push(this.addAnswerFormGroup(answer), {emitEvent: false}));
-                } else {
-                    inputAnswers.forEach((answer: IAnswer, index) => {
-                        this.formArray.push(this.addAnswerFormGroup(answer), {emitEvent: false});
-                        if (qType === QuestionType.SINGLE_CHOICE) {
-                            this.handleCorrectAnswerCheckBoxState(index);
-                        }
-                    });
-                }
-
-                this.formGroup().markAllAsTouched();
-                this.formGroup().updateValueAndValidity({emitEvent: false});
-            }
-
-        });
 
         this._subscription$.add(
             this._answerService.errors$.subscribe((errors) => {
@@ -112,11 +104,11 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
                     errors.forEach((err) => {
                         this._toastService.addErrorToast(
                             $localize`:@@ox.administration.edit.answer.action.error.title:Error during Answer action`,
-                            err
+                            err,
                         );
                     });
                 }
-            })
+            }),
         );
     }
 
@@ -124,9 +116,14 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
         this._subscription$.unsubscribe();
     }
 
-    public deleteAnswer(index: number): void {
-        if (this.hasId(index)) {
-            this.currentIndex.set(index);
+
+    public deleteAnswer(internalId: string): void {
+        const grp = this._getGrpByInternalId(this.answerArray, internalId);
+        if (!grp) {
+            return;
+        }
+
+        if (this.hasId(grp)) {
             this.openDirectActionDialog({
                 title: $localize`:@@ox.administration.edit.answer.delete.directly.title:Directly delete Answer`,
                 message: $localize`:@@ox.administration.edit.answer.delete.directly.message:Do you want to delete the answer directly? It will be remove permanently and cannot be restored.`,
@@ -134,15 +131,18 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
                 abortLabel: $localize`:@@ox.general.btn.cancel:Cancel`,
                 actionBtnLabel: $localize`:@@ox.administration.edit.answer.btn.action.delete:Delete directly`,
                 onSubmit: () => {
-                    this.formArray.removeAt(index);
+                    this.answerArray.removeAt(this.answerArray.controls.indexOf(grp));
                     this.resetDialog();
                 },
                 onAbort: () => {
                     this.resetDialog();
                 },
                 onAction: () => {
-                    this.deleteCurrentAnswer();
-                }
+                    this._deleteAnswerById(
+                        grp.get('id')!.value,
+                        this.answerArray.controls.indexOf(grp),
+                    );
+                },
             });
         } else {
             this.openConfirmDialog({
@@ -151,7 +151,7 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
                 submitLabel: $localize`:@@ox.general.btn.delete:Delete`,
                 abortLabel: $localize`:@@ox.general.btn.cancel:Cancel`,
                 onSubmit: () => {
-                    this.formArray.removeAt(index);
+                    this.answerArray.removeAt(this.answerArray.controls.indexOf(grp));
                     this.resetDialog();
                 },
                 onAbort: () => {
@@ -161,81 +161,63 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
         }
     }
 
-    public saveAnswer(index: number): void {
-        if (!this.hasId(index) && !this.isNumberSet(this.formGroup().get('id')?.value)) {
-            this._toastService.addErrorToast(
-                $localize`:@@ox.administration.edit.answer.error.noId.title:Answer can not be saved`,
-                $localize`:@@ox.administration.edit.answer.error.noId.message:The question is not saved yet, therefore the answer can not be saved. Please save the Question first.`
-            );
+    public saveAnswer(internalId: string): void {
+        const grp = this._getGrpByInternalId(this.answerArray, internalId);
+        const hasQuestionId = this._validateQuestionId(grp)
+        if (!grp || !hasQuestionId) {
             return;
         }
-        this.currentIndex.set(index);
+
         this.openConfirmDialog({
             title: $localize`:@@ox.administration.edit.answer.delete.title:Save Answer`,
             message: $localize`:@@ox.administration.edit.answer.delete.message:Are you sure you want to save this answer?`,
             submitLabel: $localize`:@@ox.general.btn.delete:Save`,
             abortLabel: $localize`:@@ox.general.btn.cancel:Cancel`,
-            onSubmit: () => this._saveCurrentAnswer(),
+            onSubmit: () => this._saveAnswerInternal(grp),
             onAbort: () => {
                 this.resetDialog();
             },
         });
     }
 
-    private _saveCurrentAnswer(): void {
-        const group = this.getGroupAtIndex(this.currentIndex());
-        const errorTitle = $localize`:@@ox.administration.edit.answer.error.noQuestionId.title:Answer can not be saved`;
-        if (group.invalid) {
-            group.markAllAsTouched();
-            this._toastService.addErrorToast(
-                errorTitle,
-                $localize`:@@ox.administration.edit.answer.error.noQuestionId.message:The answer can not be saved because form is not valid.`
-            );
-            return;
-        }
-
-        const answer: IAnswer = group.getRawValue() satisfies IAnswer;
-        if (!answer.questionId) {
-            this._toastService.addErrorToast(
-                errorTitle,
-                $localize`:@@ox.administration.edit.answer.error.noQuestionId.message:The question is not saved yet, therefore the answer can not be saved. Please save the Question first.`
-            );
-            return;
-        }
-
+    private _saveAnswerInternal(grp: FormGroup): void {
+        const answer: IAnswer = grp.getRawValue() satisfies IAnswer;
         if (answer.id) {
             answer.id = Number(answer.id);
-            this._subscription$.add(this._answerService.updateAnswer(answer).subscribe((res) => {
-                if (res?.id) {
-                    this._addSuccessToast($localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer: ${this.currentIndex() + 1} was updated successfully`);
-                }
-            }));
+            this._subscription$.add(
+                this._answerService.updateAnswer(new Answer(answer)).subscribe((res) => {
+                    if (res?.id) {
+                        this._addSuccessToast(
+                            $localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer was updated successfully`,
+                        );
+                    }
+                }),
+            );
         } else {
-            this._subscription$.add(this._answerService.createAnswer(answer).subscribe((res) => {
-                if (res?.id) {
-                    this._addSuccessToast($localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer: ${this.currentIndex() + 1} was created successfully`);
-                }
-            }));
+            this._subscription$.add(
+                this._answerService.createAnswer(new Answer(answer)).subscribe((res) => {
+                    if (res?.id) {
+                        this._addSuccessToast(
+                            $localize`:@@ox.administration.edit.answer.saveAnswer.success:Answer was created successfully`,
+                        );
+                    }
+                }),
+            );
         }
     }
 
-    public deleteCurrentAnswer(): void {
-        const group = this.formArray.at(this.currentIndex()) as FormGroup;
-        if (!this.hasId(this.currentIndex())) {
-            return;
-        }
-
-        const answer: IAnswer = group.getRawValue() satisfies IAnswer;
-        this._subscription$.add(this._answerService.deleteAnswerById(answer.id!).subscribe((res) => {
-            if (res) {
-                this._toastService.addSuccessToast(
-                    $localize`:@@ox.answers.edit.delete.title:Deleted Answer`,
-                    $localize`:@@ox.administration.edit.answer.delete.message:Answer with id: ${answer.id} was deleted successfully.`
-                );
-                this.formArray.removeAt(this.currentIndex());
-                this.resetDialog();
-            }
-        }));
+    private _deleteAnswerById(id: number, index: number): void {
+        this._subscription$.add(
+            this._answerService.deleteAnswerById(id).subscribe((res) => {
+                if (res) {
+                    this._addSuccessToast(
+                        $localize`:@@ox.administration.edit.answer.delete.message:Answer with id: ${id} was deleted successfully.`,
+                    );
+                    this.answerArray.removeAt(index);
+                    this.resetDialog();
+                }
+            }),
+        );
     }
 
     private _addSuccessToast(localizedMessage: string): void {
@@ -248,22 +230,38 @@ export class AnswerFormComponent extends AbstractEdit implements OnDestroy {
     }
 
     public handleCorrectAnswerCheckBoxState(index: number): void {
-        if (this.questionTypeSignal() === QuestionType.SINGLE_CHOICE) {
-            this.formArray.controls.forEach((group, i) => {
+        if (this.questionType() === QuestionType.SINGLE_CHOICE) {
+            this.answerArray.controls.forEach((group, i) => {
                 const ctrl = group.get('isCorrect');
                 ctrl?.setValue(i === index, {
                     emitEvent: true,
-                    onlySelf: true
+                    onlySelf: true,
                 });
             });
         }
     }
 
-    protected handleContextMenuAction(item: ContextMenuItem<number>, index: number): void {
-        item.action(index);
+    protected handleContextMenuAction(
+        item: ContextMenuItem<string>,
+        internalId: string,
+    ): void {
+        item.action(internalId);
     }
 
     protected addAnswer(): void {
-        this.formArray.push(this.addAnswerFormGroup(undefined, this.assignedOptionId()));
+        this.answerArray.push(
+            this.addAnswerFormGroup(undefined, this.assignedOptionId()),
+        );
+    }
+
+    protected getAnswerControls(): FormGroup[] {
+        if (this.questionType() === QuestionType.ASSIGNMENT) {
+            return this.answerArray.controls.filter((ctrl) => {
+                const ctrlValue = Number(ctrl.get('assignedOptionId')?.value) || -1;
+                return ctrlValue === this.assignedOptionId();
+            });
+        }
+
+        return this.answerArray.controls;
     }
 }

@@ -17,7 +17,6 @@ export class SidebarService {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationStart))
       .subscribe((event) => {
-        console.log("Navigating TO:", event.url);
         this._isExamEditPage$.next(event.url.includes("exam/edit"));
       });
 

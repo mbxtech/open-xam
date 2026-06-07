@@ -23,9 +23,7 @@
             </form>
         </div>
     </ox-card>
-    <ox-question-edit [formGroup]="formGroup" formArrayName="questions"
-                      [questionsInput]="questionsSignal()"
-                      [examId]="exam?.id || null"/>
+    <ox-question-edit [questionArray]="questionArray" />
 </div>
 <div class="gab-to-bottom-bar"></div>
 <ox-sticky-bottom-bar [countErrorElements]="invalidElementsSet().size"

@@ -25,6 +25,8 @@ export class ContextMenu<T> {
   public position: InputSignal<'bottom-left' | 'bottom-right'> = input<'bottom-left' | 'bottom-right'>('bottom-right');
   public disabled: InputSignal<boolean> = input<boolean>(false);
   public ariaLabel: InputSignal<string> = input<string>('Mehr Optionen');
+  public id: InputSignal<string> = input<string>('context-menu');
+  public dataTestId: InputSignal<string> = input<string>('context-menu');
 
   public itemClicked: OutputEmitterRef<ContextMenuItem<T>> = output<ContextMenuItem<T>>();
   public menuOpened: OutputEmitterRef<void> = output<void>();

@@ -2,10 +2,22 @@ import {error, info, warn} from '@tauri-apps/plugin-log';
 
 export default class Logger {
 
+    private static _instance: Logger;
+
     private readonly logTag: string = 'App';
     constructor(logTag?: string) {
         this.logTag = logTag ?? '';
     }
+
+    public static getInstance(logTag?: string): Logger {
+        if (this._instance) {
+            return this._instance;
+        }
+
+        this._instance = new Logger(logTag);
+        return this._instance;
+    }
+
 
     private _isJest: boolean = typeof window === 'undefined';
     private _logLoggingError = (type: string, err: unknown) => {

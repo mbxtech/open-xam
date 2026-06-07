@@ -28,7 +28,6 @@ export class Checkbox implements ControlValueAccessor {
   private onTouched: () => void = () => {};
 
   protected toggle(): void {
-    console.log('Toggling checkbox state');
     if (this.disabled()) return;
 
     const value = !this.checked();

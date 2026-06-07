@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import {Component, inject, signal, WritableSignal} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {FaIconComponent} from '@fortawesome/angular-fontawesome';
 import {
     faChevronLeft,
     faChevronRight,
@@ -12,11 +12,9 @@ import {
     faLayerGroup,
     IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
-import { signal, WritableSignal } from '@angular/core';
-import { SidebarService } from './service/sidebar.service';
-import { Observable } from 'rxjs';
-import { ToggleGroup } from "../../../shared/forms/toggle-group/toggle-group";
-import { ButtonComponent } from "../../../shared/components/button/button.component";
+import {SidebarService} from './service/sidebar.service';
+import {Observable} from 'rxjs';
+import {ButtonComponent} from "../../../shared/components/button/button.component";
 
 interface NavItem {
     label: string;

@@ -42,6 +42,7 @@ import { StickyBottomBar } from "./components/sticky-buttom-bar/sticky-bottom-ba
 import { CategorySelectComponent } from "../../../../../shared/components/category-select/category-select.component";
 import { ImportCacheService } from "../../../../../shared/service/import-cache.service";
 import Logger from "../../../../../shared/util/Logger";
+import { AbstractEdit } from "./components/question-edit/components/abstract-edit/abstract-edit";
 
 @Component({
   selector: "app-edit",
@@ -60,7 +61,7 @@ import Logger from "../../../../../shared/util/Logger";
   templateUrl: "./edit.component.html",
   styleUrl: "./edit.component.scss",
 })
-export class EditComponent implements OnDestroy {
+export class EditComponent extends AbstractEdit implements OnDestroy {
   private readonly _logger = new Logger("EditComponent");
 
   protected readonly faAdd = faAdd;
@@ -97,6 +98,7 @@ export class EditComponent implements OnDestroy {
     });
 
   constructor() {
+    super();
     this._formGroup = this._fb.group({
       id: new FormControl(null),
       pointsToSucceeded: new FormControl(0, {
@@ -203,6 +205,10 @@ export class EditComponent implements OnDestroy {
     this._subscriptions$.unsubscribe();
   }
 
+  get questionArray(): FormArray {
+    return this._formGroup.get("questions") as FormArray;
+  }
+
   private _setInitialValues(ex: IExam): void {
     this._exam = ex;
     this._formGroup.patchValue(ex);
@@ -210,7 +216,14 @@ export class EditComponent implements OnDestroy {
       this.getCategoryGroup().patchValue(ex.category);
     }
     this.selectedStatus.set(ex.statusType ?? "");
-    this.questionsSignal.set(ex.questions);
+
+    if (ex.questions.length) {
+      console.log(`adding questions lengt ${ex.questions.length}`);
+      ex.questions.forEach((question) => {
+        this.questionArray.push(this.addQuestion(question));
+      });
+    }
+
     this._formGroup.updateValueAndValidity();
     this._formGroup.markAllAsTouched();
     this.pageTitle.set(
@@ -236,13 +249,20 @@ export class EditComponent implements OnDestroy {
     const data = this._formGroup.getRawValue() as IExam;
 
     if (this.exam?.id) {
-      this._subscriptions$.add(this._service.updateExam(new Exam(data)).subscribe((res) => {
+      this._subscriptions$.add(
+        this._service.updateExam(new Exam(data)).subscribe((res) => {
           if (res) {
-              this._addToastMessage($localize`:@@ox.exam.edit.update.success:Successfully updated exam ${this.exam?.name} with id: ${this.exam?.id}`, true);
-              this._formGroup.reset();
-              this._router.navigate(['overview'], {relativeTo: this._route.parent}).then();
+            this._addToastMessage(
+              $localize`:@@ox.exam.edit.update.success:Successfully updated exam ${this.exam?.name} with id: ${this.exam?.id}`,
+              true,
+            );
+            this._formGroup.reset();
+            this._router
+              .navigate(["overview"], { relativeTo: this._route.parent })
+              .then();
           }
-      }));
+        }),
+      );
     } else {
       this._subscriptions$.add(
         this._service.createExam(new Exam(data)).subscribe((result) => {

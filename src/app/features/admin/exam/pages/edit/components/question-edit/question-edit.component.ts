@@ -1,27 +1,18 @@
 import {
     Component,
-    effect,
     ElementRef,
     HostListener,
     inject,
-    input,
-    InputSignal,
+    Input,
     OnDestroy,
     OnInit,
     signal,
     ViewChild,
     WritableSignal,
-} from "@angular/core";
-import {
-    FormArray,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
-import {$localize} from "@angular/localize/init";
-import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+} from '@angular/core';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { $localize } from '@angular/localize/init';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
     faAdd,
     faArrowsLeftRight,
@@ -31,41 +22,36 @@ import {
     faFloppyDisk,
     faListCheck,
     faTrash,
-} from "@fortawesome/free-solid-svg-icons";
-import {Subscription} from "rxjs";
-import {BadgeComponent} from "../../../../../../../shared/components/badge/badge.component";
-import {CardComponent} from "../../../../../../../shared/components/card/card.component";
+} from '@fortawesome/free-solid-svg-icons';
+import { faEye } from '@fortawesome/free-solid-svg-icons/faEye';
+import { Subscription } from 'rxjs';
+import { BadgeComponent } from '../../../../../../../shared/components/badge/badge.component';
+import { ButtonComponent } from '../../../../../../../shared/components/button/button.component';
+import { CardComponent } from '../../../../../../../shared/components/card/card.component';
+import { CategorySelectComponent } from '../../../../../../../shared/components/category-select/category-select.component';
 import {
-    CategorySelectComponent
-} from "../../../../../../../shared/components/category-select/category-select.component";
-import {DialogContentComponent} from "../../../../../../../shared/components/dialog/dialog-content.component";
-import {DialogHeaderComponent} from "../../../../../../../shared/components/dialog/dialog-header.component";
-import {DialogComponent} from "../../../../../../../shared/components/dialog/dialog.component";
-import {BasicInputComponent} from "../../../../../../../shared/forms/basic-input/basic-input.component";
-import {DynamicSelectComponent} from "../../../../../../../shared/forms/dynamic-select/dynamic-select.component";
-import FormErrorMessageExtractor from "../../../../../../../shared/forms/validation/form-error-message-extractor";
-import {IAnswer} from "../../../../../../../shared/model/interfaces/answer.interface";
-import {IAssignmentOption} from "../../../../../../../shared/model/interfaces/assignment-option.interface";
-import {IQuestion} from "../../../../../../../shared/model/interfaces/question.interface";
+    ContextMenu,
+    ContextMenuItem,
+} from '../../../../../../../shared/components/context-menu/context-menu';
+import { DialogContentComponent } from '../../../../../../../shared/components/dialog/dialog-content.component';
+import { DialogHeaderComponent } from '../../../../../../../shared/components/dialog/dialog-header.component';
+import { DialogComponent } from '../../../../../../../shared/components/dialog/dialog.component';
+import { ElementInView } from '../../../../../../../shared/directives/element-in-view';
+import { BasicInputComponent } from '../../../../../../../shared/forms/basic-input/basic-input.component';
+import { DynamicSelectComponent } from '../../../../../../../shared/forms/dynamic-select/dynamic-select.component';
+import FormErrorMessageExtractor from '../../../../../../../shared/forms/validation/form-error-message-extractor';
+import { IQuestion } from '../../../../../../../shared/model/interfaces/question.interface';
 import {
     mapQuestionTypeToText,
     QuestionType,
     questionTypesSelectOptions,
-} from "../../../../../../../shared/model/question-type.enum";
-import {QuestionService} from "../../../../../../../shared/service/question.service";
-import {ToastService} from "../../../../../../../shared/service/toast.service";
-import {AbstractEdit} from "./components/abstract-edit/abstract-edit";
-import {AnswerFormComponent} from "./components/answer-form/answer-form.component";
-import {AssignmentOptionComponent} from "./components/assignment-option/assignment-option.component";
-import {
-    ContextMenu,
-    ContextMenuItem,
-} from "../../../../../../../shared/components/context-menu/context-menu";
-import {faEye} from "@fortawesome/free-solid-svg-icons/faEye";
-import {ButtonComponent} from "../../../../../../../shared/components/button/button.component";
-import {StrippedTextPipe} from "../../../../../../../shared/pipes/stripped-text-pipe";
-import {TEXT_VALIDATORS} from "../../../../../../../shared/forms/validation/validators-sets";
-import {ElementInView} from "../../../../../../../shared/directives/element-in-view";
+} from '../../../../../../../shared/model/question-type.enum';
+import { StrippedTextPipe } from '../../../../../../../shared/pipes/stripped-text-pipe';
+import { QuestionService } from '../../../../../../../shared/service/question.service';
+import { ToastService } from '../../../../../../../shared/service/toast.service';
+import { AbstractEdit } from './components/abstract-edit/abstract-edit';
+import { AnswerFormComponent } from './components/answer-form/answer-form.component';
+import { AssignmentOptionComponent } from './components/assignment-option/assignment-option.component';
 
 interface SelectedQuestionTypeEntry {
     index: number;
@@ -73,7 +59,7 @@ interface SelectedQuestionTypeEntry {
 }
 
 @Component({
-    selector: "ox-question-edit",
+    selector: 'ox-question-edit',
     imports: [
         AnswerFormComponent,
         AssignmentOptionComponent,
@@ -94,12 +80,10 @@ interface SelectedQuestionTypeEntry {
         StrippedTextPipe,
         ElementInView,
     ],
-    templateUrl: "./question-edit.component.html",
-    styleUrl: "./question-edit.component.scss",
+    templateUrl: './question-edit.component.html',
+    styleUrl: './question-edit.component.scss',
 })
-export class QuestionEditComponent
-    extends AbstractEdit
-    implements OnDestroy, OnInit {
+export class QuestionEditComponent extends AbstractEdit implements OnDestroy, OnInit {
     protected readonly faArrowLeftRight = faArrowsLeftRight;
     protected readonly faAdd = faAdd;
     protected readonly faListCheck = faListCheck;
@@ -110,114 +94,91 @@ export class QuestionEditComponent
     protected readonly QuestionType = QuestionType;
 
     private readonly _toastService = inject(ToastService);
-    private readonly _fb = inject(FormBuilder);
     private readonly _questionService = inject(QuestionService);
 
-    private readonly _questionTypes: { value: any; label: string }[] =
-        questionTypesSelectOptions();
+    private readonly _questionTypes: { value: any; label: string }[] = questionTypesSelectOptions();
     private readonly _subscription$: Subscription = new Subscription();
 
-    private readonly EMPTY_ANSWERS: IAnswer[] = [];
-    private readonly EMPTY_OPTIONS: IAssignmentOption[] = [];
-
-    private readonly _currentSelectedQuestionType: WritableSignal<
-        SelectedQuestionTypeEntry[]
-    > = signal<SelectedQuestionTypeEntry[]>([]);
-    public questionsInput: InputSignal<IQuestion[]> = input<IQuestion[]>([]);
-    public examId: InputSignal<number | null> = input<number | null>(null);
+    private readonly _currentSelectedQuestionType: WritableSignal<SelectedQuestionTypeEntry[]> =
+        signal<SelectedQuestionTypeEntry[]>([]);
     protected collapsedIndices: WritableSignal<number[]> = signal<number[]>([]);
     protected allCollapsed: WritableSignal<boolean> = signal<boolean>(false);
-    protected currentQuestionInView: WritableSignal<number | null> = signal<
-        number | null
-    >(null);
-    protected previousQuestionInView: WritableSignal<number | null> = signal<
-        number | null
-    >(null);
-    protected scrollingByNavigation: WritableSignal<boolean> =
-        signal<boolean>(false);
+    protected currentQuestionInView: WritableSignal<number | null> = signal<number | null>(null);
+    protected previousQuestionInView: WritableSignal<number | null> = signal<number | null>(null);
+    protected scrollingByNavigation: WritableSignal<boolean> = signal<boolean>(false);
 
-    @ViewChild("sidebar") sidebar!: ElementRef;
+    @ViewChild('sidebar') sidebar!: ElementRef;
 
-    @HostListener("window:scroll", ["$event"])
+    @Input({ required: true })
+    public questionArray!: FormArray;
+
+    @HostListener('window:scroll', ['$event'])
     onWindowScroll(_event: Event): void {
         setTimeout(() => {
             this.scrollingByNavigation.set(false);
         }, 500);
     }
 
-    protected readonly contextMenuItems: ContextMenuItem<number>[] = [
+    protected readonly contextMenuItems: ContextMenuItem<string>[] = [
         {
             label: $localize`:@@ox.general.delete:Delete`,
             icon: faTrash,
-            action: (param) => {
-                if (typeof param === "number" && param >= 0) {
+            action: param => {
+                if (typeof param === 'string' && param.length) {
                     this.removeQuestion(param);
                 }
             },
-            dataTestId: "delete-question-btn",
+            dataTestId: 'delete-question-btn',
         },
         {
             label: $localize`:@@ox.general.delete:Save`,
             icon: faFloppyDisk,
-            action: (param) => {
-                if (typeof param === "number" && param >= 0) {
+            action: param => {
+                if (typeof param === 'string' && param.length) {
                     this.openSaveDialog(param);
                 }
             },
-            dataTestId: "save-question-btn",
+            dataTestId: 'save-question-btn',
         },
         {
             label: $localize`:@@ox.administration.edit.question.contextMenu.collapse:Collapse/Expand`,
             icon: faEye,
-            action: (param) => {
-                if (typeof param === "number" && param >= 0) {
-                    if (
-                        this.collapsedIndices().findIndex((index) => index === param) === -1
-                    ) {
-                        this.collapsedIndices.update((prev) => [...prev, param]);
-                    } else {
-                        this.collapsedIndices.update((prev) =>
-                            prev.filter((index) => index !== param),
+            action: param => {
+                if (typeof param === 'string' && param.length) {
+                    const grp = this._getGrpByInternalId(this.questionArray, param);
+                    const qIndex = this.questionArray.controls.indexOf(grp!);
+                    if (this.collapsedIndices().includes(qIndex)) {
+                        this.collapsedIndices.update(prev =>
+                            prev.filter(index => index !== qIndex)
                         );
+                    } else {
+                        this.collapsedIndices.update(prev => [...prev, qIndex]);
                     }
                 }
             },
-            dataTestId: "collapse-question-btn",
+            dataTestId: 'collapse-question-btn',
         },
     ];
 
     constructor() {
         super();
-        effect(() => {
-            if (this.questionsInput().length && !this.formArray.length) {
-                this.questionsInput().forEach((question, index) => {
-                    this.addQuestion(question);
-                    if (question.type === QuestionType.ASSIGNMENT) {
-                        this.handleAssignmentAnswersChange(question.answers, index);
-                    }
-                });
-                this.formGroup().markAllAsTouched();
-                this.formGroup().updateValueAndValidity();
-            }
-        });
-
         this._subscription$.add(
-            this._questionService.errors$.subscribe((err) => {
+            this._questionService.errors$.subscribe(err => {
                 if (err.length) {
-                    err.forEach((error) => {
+                    err.forEach(error => {
                         this._toastService.addErrorToast(
                             $localize`:@@ox.administration.edit.question.operation.errorTitle:Error during question operation`,
-                            error,
+                            error
                         );
                     });
                 }
-            }),
+            })
         );
     }
 
     ngOnInit(): void {
         this._subscription$.add(
-            this.formArray.valueChanges.subscribe((value: IQuestion[]) => {
+            this.questionArray.valueChanges.subscribe((value: IQuestion[]) => {
                 value.forEach((q, index) => {
                     const lastQuestionType =
                         this._currentSelectedQuestionType().at(index)?.questionType;
@@ -226,17 +187,17 @@ export class QuestionEditComponent
                             lastQuestionType === QuestionType.ASSIGNMENT &&
                             q.type !== QuestionType.ASSIGNMENT
                         ) {
-                            (this.getGroupAtIndex(index).get("options") as FormArray).clear({
+                            (this.questionArray.at(index).get('options') as FormArray).clear({
                                 emitEvent: false,
                             });
-                            (this.getGroupAtIndex(index).get("answers") as FormArray).clear({
+                            (this.questionArray.at(index).get('answers') as FormArray).clear({
                                 emitEvent: false,
                             });
                         } else if (
                             q.type === QuestionType.ASSIGNMENT &&
                             lastQuestionType !== QuestionType.ASSIGNMENT
                         ) {
-                            (this.getGroupAtIndex(index).get("answers") as FormArray).clear({
+                            (this.questionArray.at(index).get('answers') as FormArray).clear({
                                 emitEvent: false,
                             });
                         }
@@ -245,7 +206,7 @@ export class QuestionEditComponent
                         this._currentSelectedQuestionType()[index].questionType = q.type;
                     }
                 });
-            }),
+            })
         );
     }
 
@@ -256,53 +217,19 @@ export class QuestionEditComponent
     private _addSuccessToast(localizedMessage: string): void {
         this._toastService.addSuccessToast(
             localizedMessage,
-            $localize`:@@ox.administration.edit.question.operation.successTitle:Edit Question success`,
+            $localize`:@@ox.administration.edit.question.operation.successTitle:Edit Question success`
         );
     }
 
-    protected addQuestion(question?: IQuestion) {
-        const index = this.formArray.length > 0 ? this.formArray.length + 1 : 0;
-        this._currentSelectedQuestionType.set([
-            ...this._currentSelectedQuestionType(),
-            {
-                index,
-                questionType: question?.type || QuestionType.SINGLE_CHOICE,
-            },
-        ]);
-
-        const fg = this._fb.group({
-            id: new FormControl<number | null>(question?.id ?? null),
-            questionText: new FormControl<string>(question?.questionText ?? "", {
-                updateOn: "blur",
-                validators: TEXT_VALIDATORS,
-            }),
-            pointsTotal: new FormControl<number>(question?.pointsTotal ?? 0),
-            type: new FormControl<QuestionType>(
-                question?.type || QuestionType.SINGLE_CHOICE,
-                [Validators.required],
-            ),
-            pointsPerCorrectAnswer: new FormControl<number | null>(
-                question?.pointsPerCorrectAnswer ?? 0,
-            ),
-            answers: new FormArray([]),
-            options: new FormArray([]),
-            category: new FormGroup({
-                id: new FormControl<number | null>(question?.category?.id ?? null),
-                name: new FormControl<string | null>(question?.category?.name ?? null),
-            }),
-            examId: new FormControl<number | null>(this.examId()),
-        });
-
-        if (question) {
-            fg.markAllAsTouched({emitEvent: false});
+    protected removeQuestion(internalId: string) {
+        const grp = this._getGrpByInternalId(this.questionArray, internalId);
+        if (!grp) {
+            return;
         }
 
-        this.formArray.push(fg);
-    }
+        const index = this.questionArray.controls.indexOf(grp);
 
-    protected removeQuestion(index: number) {
-        if (this.hasId(index)) {
-            this.currentIndex.set(index);
+        if (this.hasId(grp)) {
             this.openDirectActionDialog({
                 title: $localize`:@@ox.administration.edit.question.delete.directly.title:Directly delete Question`,
                 message: $localize`:@@ox.administration.edit.question.delete.directly.message:Do you want to delete the question directly? It will be remove permanently and cannot be restored.`,
@@ -311,12 +238,13 @@ export class QuestionEditComponent
                 actionBtnLabel: $localize`:@@ox.administration.edit.question.btn.action.delete:Delete directly`,
                 onSubmit: () => {
                     this._removeQuestionInternal(index);
+                    this.resetDialog();
                 },
                 onAbort: () => {
                     this.resetDialog();
                 },
                 onAction: () => {
-                    this.deleteQuestion();
+                    this.deleteQuestion(grp.get('id')!.value, index);
                 },
             });
         } else {
@@ -327,6 +255,7 @@ export class QuestionEditComponent
                 abortLabel: $localize`:@@ox.general.cancel:Cancel`,
                 onSubmit: () => {
                     this._removeQuestionInternal(index);
+                    this.resetDialog();
                 },
                 onAbort: () => {
                     this.resetDialog();
@@ -336,112 +265,88 @@ export class QuestionEditComponent
     }
 
     private _removeQuestionInternal(index: number) {
-        this._currentSelectedQuestionType.update((prev) =>
-            prev.filter((_, i) => i !== index),
-        );
-        this.formArray.removeAt(index);
+        this._currentSelectedQuestionType.update(prev => prev.filter((_, i) => i !== index));
+        this.questionArray.removeAt(index);
     }
 
-    public openSaveDialog(index: number): void {
-        this.currentIndex.set(index);
+    public openSaveDialog(internalId: string): void {
+        const grp = this._getGrpByInternalId(this.questionArray, internalId);
+        const errorToastTitle = $localize`@@ox.administration.edit.question.save.error.title:Question can not be saved`;
+        if (!grp) {
+            this.toastService.addErrorToast(
+                errorToastTitle,
+                $localize`@@ox.administration.edit.question.error.internalId.mesasge:Question can not be saved, because of an unknown internal error. Pleae try again or remove and recreate the question.`
+            );
+            return;
+        }
+
+        if (!grp.get('examId')?.value) {
+            this._toastService.addErrorToast(
+                errorToastTitle,
+                $localize`@@ox.administration.edit.question.error.examId.title:Question can not be saved, because the exam has not be saved yet, please save the exam first`
+            );
+            return;
+        }
+
+        if (!grp.valid) {
+            const errors = FormErrorMessageExtractor.extractMessagesAsString(grp);
+            this._toastService.addErrorToast(
+                errorToastTitle,
+                $localize`:@@ox.administration.edit.question.error.invalid:Cannot save question, form is invalid. ${errors}`
+            );
+            return;
+        }
+
         this.openConfirmDialog({
             title: $localize`:@@ox.administration.edit.question.save.title:Save Question`,
             message: $localize`:@@ox.administration.edit.question.save.message:Do you want to save the current changes to this question?`,
             submitLabel: $localize`:@@ox.general.save:Save`,
             abortLabel: $localize`:@@ox.general.cancel:Cancel`,
-            onSubmit: () => this._saveCurrentQuestion(),
+            onSubmit: () => this._saveCurrentQuestion(grp),
             onAbort: () => {
                 this.resetDialog();
             },
         });
     }
 
-    private _saveCurrentQuestion(): void {
-        if (!this.hasId(this.currentIndex())) {
-            this._toastService.addErrorToast(
-                $localize`:@@ox.administration.edit.question.error.title:Failed to save question`,
-                $localize`:@@ox.administration.edit.question.save.error.id:Cannot save question, id is missing please save question before.`,
-            );
-            this.resetDialog();
-            return;
-        }
-
-        const questionToUpdate = this.getGroupAtIndex(this.currentIndex());
-        if (!questionToUpdate.valid) {
-            const errors =
-                FormErrorMessageExtractor.extractMessagesAsString(questionToUpdate);
-            this._toastService.addErrorToast(
-                $localize`:@@ox.administration.edit.question.error.title:Failed to save question`,
-                $localize`:@@ox.administration.edit.question.save.error.invalid:Cannot save question, form is invalid. ${errors}`,
-            );
-            return;
-        }
-
-        const question: IQuestion = this.getQuestionValue(
-            questionToUpdate.getRawValue() satisfies IQuestion,
-        );
+    private _saveCurrentQuestion(grp: FormGroup): void {
+        const question: IQuestion = this.getQuestionValue(grp.getRawValue() as IQuestion);
 
         this._subscription$.add(
-            this._questionService.updateQuestion(question).subscribe((res) => {
+            this._questionService.updateQuestion(question).subscribe(res => {
                 if (res) {
                     this._addSuccessToast(
-                        $localize`:@@ox.administration.edit.question.save.success:Question was saved successfully`,
+                        $localize`:@@ox.administration.edit.question.save.success:Question was saved successfully`
                     );
                     this.resetDialog();
                 }
-            }),
+            })
         );
     }
 
-    public deleteQuestion(): void {
-        const id = Number(
-            this.getGroupAtIndex(this.currentIndex()).get("id")?.value,
-        );
-        if (!this.isNumberSet(id)) {
-            this._toastService.addErrorToast(
-                $localize`:@@ox.administration.edit.question.error.title:Failed to delete question`,
-                $localize`:@@ox.administration.edit.question.error.id:Cannot delete question, id is missing please save question before.`,
-            );
-            return;
-        }
+    private deleteQuestion(id: number, index: number): void {
         this._subscription$.add(
-            this._questionService.deleteQuestion(id).subscribe((res) => {
+            this._questionService.deleteQuestion(id).subscribe(res => {
                 if (res) {
-                    this._removeQuestionInternal(this.currentIndex());
+                    this._removeQuestionInternal(index);
                     this._addSuccessToast(
-                        $localize`:@@ox.administration.edit.question.delete.success:Question was deleted successfully`,
+                        $localize`:@@ox.administration.edit.question.delete.success:Question was deleted successfully`
                     );
+                    this.resetDialog();
                 }
-            }),
+            })
         );
-        this.resetDialog();
-    }
-
-    public handleAssignmentAnswersChange(
-        answers: IAnswer[],
-        index: number,
-    ): void {
-        if (answers.length) {
-            (this.getGroupAtIndex(index).get("answers") as FormArray).clear();
-            answers.forEach((answer) => {
-                const answerGroup = this.addAnswerFormGroup(answer);
-                (this.getGroupAtIndex(index).get("answers") as FormArray).push(
-                    answerGroup,
-                );
-            });
-            this.formGroup().updateValueAndValidity({emitEvent: false});
-        }
     }
 
     protected handleCollapseAll(): void {
         this.allCollapsed.set(!this.allCollapsed());
         if (this.allCollapsed()) {
-            this.collapsedIndices.update((prev) => {
+            this.collapsedIndices.update(prev => {
                 return [
                     ...prev,
-                    ...this.formArray.controls
+                    ...this.questionArray.controls
                         .map((_, index) => index)
-                        .filter((i) => !this.isCollapsed(i)),
+                        .filter(i => !this.isCollapsed(i)),
                 ];
             });
         } else {
@@ -449,33 +354,35 @@ export class QuestionEditComponent
         }
     }
 
+    protected addQuestionInternal(question?: IQuestion): void {
+        const index = this.questionArray.length > 0 ? this.questionArray.length + 1 : 0;
+        this._currentSelectedQuestionType.set([
+            ...this._currentSelectedQuestionType(),
+            {
+                index,
+                questionType: question?.type || QuestionType.SINGLE_CHOICE,
+            },
+        ]);
+
+        this.questionArray.push(this.addQuestion(question));
+    }
+
     public getQuestionValue(q: IQuestion): IQuestion {
-        const question: IQuestion = {...q};
+        const question: IQuestion = { ...q };
         question.id = Number(question.id);
         return question;
     }
 
-    public getAnswers(index: number): IAnswer[] {
-        const questionId = this.formArray.at(index)?.get("id")?.value;
-        return (
-            this.questionsInput().find((q) => q.id === questionId)?.answers ||
-            this.EMPTY_ANSWERS
-        );
+    public getAnswers(index: number): FormArray<FormGroup> {
+        return this.questionArray.at(index).get('answers') as FormArray;
     }
 
-    protected handleContextMenuAction(
-        item: ContextMenuItem<number>,
-        index: number,
-    ): void {
-        item.action(index);
+    protected handleContextMenuAction(item: ContextMenuItem<string>, internalId: string): void {
+        item.action(internalId);
     }
 
-    public getAssignmentOptions(index: number): IAssignmentOption[] {
-        const questionId = this.formArray.at(index)?.get("id")?.value;
-        return (
-            this.questionsInput().find((q) => q.id === questionId)?.options ||
-            this.EMPTY_OPTIONS
-        );
+    public getAssignmentOptions(index: number): FormArray<FormGroup> {
+        return this.questionArray.at(index).get('options') as FormArray;
     }
 
     public get questionTypes(): { value: any; label: string }[] {
@@ -483,9 +390,7 @@ export class QuestionEditComponent
     }
 
     public getQuestionType(index: number): QuestionType {
-        return (
-            this.formArray.at(index).get("type")?.value ?? QuestionType.SINGLE_CHOICE
-        );
+        return this.questionArray.at(index).get('type')?.value ?? QuestionType.SINGLE_CHOICE;
     }
 
     protected mapQuestionTypeToText(q: QuestionType): string {
@@ -493,12 +398,12 @@ export class QuestionEditComponent
     }
 
     public isCollapsed(index: number): boolean {
-        return this.collapsedIndices().find((id) => id === index) !== undefined;
+        return this.collapsedIndices().includes(index);
     }
 
     protected getQuestionStatus(index: number): string {
-        const grp = this.formArray.at(index);
-        return grp.touched && grp.invalid ? "error" : "complete";
+        const grp = this.questionArray.at(index);
+        return grp.touched && grp.invalid ? 'error' : 'complete';
     }
 
     protected scrollToQuestion(index: number): void {
@@ -506,7 +411,7 @@ export class QuestionEditComponent
         if (questionElement) {
             this.scrollingByNavigation.set(true);
             this.currentQuestionInView.set(index);
-            questionElement.scrollIntoView({behavior: "smooth"});
+            questionElement.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
@@ -521,57 +426,49 @@ export class QuestionEditComponent
     }
 
     protected scrollSideBarIfNeeded(index: number): void {
-        const previousQuestionInView = this.previousQuestionInView();
         const element = document.getElementById(`question-sidebar-${index}`);
         if (!element) {
             return;
         }
 
+        const previousQuestionInView = this.previousQuestionInView();
         const isInView = this._isElementInView(element, this.sidebar.nativeElement);
 
         const elementsInView = this._getCurrentSidebarElementsInView();
 
         if (!isInView) {
             const scrollUpIndex = index - (elementsInView.length - 1);
-            if (scrollUpIndex.toString().includes("-")) {
+            if (scrollUpIndex.toString().includes('-')) {
                 const firstElement = document.getElementById(`question-sidebar-0`);
-                firstElement?.scrollIntoView({behavior: "smooth"});
-            } else if (
-                previousQuestionInView !== null &&
-                previousQuestionInView > index
-            ) {
+                firstElement?.scrollIntoView({ behavior: 'smooth' });
+            } else if (previousQuestionInView !== null && previousQuestionInView > index) {
                 const allSidebarElements = this._getAllSidebarElements();
                 allSidebarElements[scrollUpIndex]?.scrollIntoView({
-                    behavior: "smooth",
+                    behavior: 'smooth',
                 });
             } else {
-                element.scrollIntoView({behavior: "smooth"});
+                element.scrollIntoView({ behavior: 'smooth' });
             }
         }
     }
 
     private _getCurrentSidebarElementsInView(): HTMLElement[] {
         return this._getAllSidebarElements()
-            .filter((el) => el !== null)
-            .filter((el) => this._isElementInView(el, this.sidebar.nativeElement));
+            .filter(el => el !== null)
+            .filter(el => this._isElementInView(el, this.sidebar.nativeElement));
     }
 
     private _getAllSidebarElements(): HTMLElement[] {
-        return this.formArray.controls.map((_, index) =>
-            this.sidebar.nativeElement.querySelector(`#question-sidebar-${index}`),
+        return this.questionArray.controls.map((_, index) =>
+            this.sidebar.nativeElement.querySelector(`#question-sidebar-${index}`)
         );
     }
 
-    private _isElementInView(
-        element: HTMLElement,
-        rootElement?: HTMLElement,
-    ): boolean {
+    private _isElementInView(element: HTMLElement, rootElement?: HTMLElement): boolean {
         if (rootElement) {
             return (
-                element.getBoundingClientRect().top >=
-                rootElement.getBoundingClientRect().top &&
-                element.getBoundingClientRect().bottom <=
-                rootElement.getBoundingClientRect().bottom
+                element.getBoundingClientRect().top >= rootElement.getBoundingClientRect().top &&
+                element.getBoundingClientRect().bottom <= rootElement.getBoundingClientRect().bottom
             );
         }
         return (
@@ -581,6 +478,10 @@ export class QuestionEditComponent
     }
 
     protected getCategoryGroup(index: number): FormGroup {
-        return this.getGroupAtIndex(index).get("category") as FormGroup;
+        return this.questionArray.at(index).get('category') as FormGroup;
+    }
+
+    protected getAnswerArray(index: number): FormArray<FormGroup> {
+        return this.questionArray.at(index).get('answers') as FormArray;
     }
 }
